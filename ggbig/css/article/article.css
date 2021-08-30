@@ -1,0 +1,104 @@
+
+* {
+  box-sizing: border-box;
+}
+.arttitle{
+  width: 130px;
+  height: 60px;
+  right: 90%;
+  font-weight: 400;
+ margin-right: 20px;
+}
+.flex{
+  display: flex;
+  align-items:flex-start;
+  max-width:96%;
+  position: relative;
+  left: 0%;
+  padding: 30px;
+  
+  }
+  .flex01{
+    display: flex;
+  align-items:flex-start;
+  max-width:96%;
+  position: relative;
+  left: 0%;
+  padding: 20px;
+    }
+.artcontainer {
+  position: relative;
+  border-radius:10px;
+  margin: 0 20px;
+  padding: 15px;;
+  border:5px gray solid;
+  height: auto;
+  width: 389.02px;
+  
+}
+.artimg{
+ display: block;
+ margin: auto;
+}
+.art{
+  position: relative;
+  max-width: 55%;
+  left: 15%;
+}
+.artcontainer h1{
+  color: rgb(0, 82, 68);
+}
+.artcontainer a{
+  color: red;
+}
+
+
+  
+  
+  
+.QA{
+border: #000;
+margin-bottom: 200px;
+border-style:double;
+width: 60%;
+align-items: center;
+display: block;
+position: relative;
+margin-left: 20%;
+
+}
+
+.img img{
+  width: 60%;
+  align-items: center;
+  display: block;
+  position: relative;
+  margin-left: 20%;
+}
+.QandA .Question{ /*標題的CSS定義*/
+font-size: 20px;
+color: red;
+width: 60%;
+left: 30%;
+border-bottom: 1px #aaa dotted;
+font-style: oblique;
+font-weight: 900;
+}
+
+
+.QandA .Answer{ /*內文的CSS定義*/
+font-size: 15px;
+display: none;
+padding: 10px 0px;
+background: #efefef;
+border-bottom: 1px #aaa dotted;
+
+}
+
+.QandA:hover{ /*滑鼠移至區塊變色*/
+
+background: #ebf6f7;
+
+}
+
+
