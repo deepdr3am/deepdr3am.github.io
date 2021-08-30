@@ -12,33 +12,39 @@
 .flex{
   display: flex;
   align-items:flex-start;
-  max-width:96%;
+  max-width:80%;
   position: relative;
-  left: 0%;
+  left: 7%;
   padding: 30px;
   
   }
   .flex01{
     display: flex;
   align-items:flex-start;
-  max-width:96%;
+  max-width:80%;
   position: relative;
-  left: 0%;
+  left: 7%;
   padding: 20px;
     }
 .artcontainer {
   position: relative;
-  border-radius:10px;
-  margin: 0 20px;
-  padding: 15px;;
-  border:5px gray solid;
+  
+  margin-right:5%;
+  padding: 15px;
+ 
   height: auto;
-  width: 389.02px;
+  width: 30%;
+  display:inline-block;
+    background-color:#eee;
+   
+    margin-right:20px;
+    box-shadow: 10px 3px 9px 0px gray;
   
 }
 .artimg{
  display: block;
  margin: auto;
+ height: 200px;
 }
 .art{
   position: relative;
@@ -76,7 +82,6 @@ margin-left: 20%;
   margin-left: 20%;
 }
 .QandA .Question{ /*標題的CSS定義*/
-font-size: 20px;
 color: red;
 width: 60%;
 left: 30%;
@@ -84,13 +89,24 @@ border-bottom: 1px #aaa dotted;
 font-style: oblique;
 font-weight: 900;
 }
+.ya{
+  display: flex;
+  align-items: center;
+  padding-left:50% ;
+  padding-bottom: 10%;
 
+}
 
 .QandA .Answer{ /*內文的CSS定義*/
-font-size: 15px;
+
 display: none;
+
+
+
 padding: 10px 0px;
+
 background: #efefef;
+
 border-bottom: 1px #aaa dotted;
 
 }

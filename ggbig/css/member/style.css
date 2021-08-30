@@ -84,18 +84,7 @@ body{
     font-size: .8rem;
 
 }
-.submit-btn{
-    display: block;
-    margin-left: auto;
-    border: none;
-    background: #007025;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
+
 .forgot-pw{
     color:inherit;
 
@@ -127,4 +116,20 @@ body{
     font-weight: 900;
     text-decoration: none;
     color: inherit;
+}
+.submit-btn {
+    background-color: #005733;
+    height: 35px;
+    line-height: 35px;
+    width: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.ppp {
+   text-align:center;
+   color:#fff;
 }

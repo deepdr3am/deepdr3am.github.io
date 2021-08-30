@@ -36,10 +36,10 @@ a:hover{color:#00a4ac;text-decoration:none;}
 
 .leftmenu dd .menuson{display:none;}
 .leftmenu dd:first-child .menuson{display:block;}
-.menuson li.active{position:relative; background:url(/image/membercenter/libg.png) repeat-x; line-height:30px; color:#fff;}
-.menuson li cite{display:block; float:left; margin-left:32px; background:url(/image/membercenter/list.gif) no-repeat; width:16px; height:16px; margin-top:7px;}
-.menuson li.active cite{background:url(/image/membercenter/list1.gif) no-repeat;}
-.menuson li.active i{display:block; background:url(/image/membercenter/sj.png) no-repeat; width:6px; height:11px; position:absolute; right:0;z-index:10000; top:9px; right:-1px;}
+.menuson li.active{position:relative; background:url(../../image/membercenter/libg.png) repeat-x; line-height:30px; color:#fff;}
+.menuson li cite{display:block; float:left; margin-left:32px; background:url(../../image/membercenter/list.gif) no-repeat; width:16px; height:16px; margin-top:7px;}
+.menuson li.active cite{background:url(../../image/membercenter/list1.gif) no-repeat;}
+.menuson li.active i{display:block; background:url(../../image/membercenter/sj.png) no-repeat; width:6px; height:11px; position:absolute; right:0;z-index:10000; top:9px; right:-1px;}
 .menuson li a{
 	display:block;
 *display:inline; *padding-top:5px;
@@ -47,7 +47,7 @@ a:hover{color:#00a4ac;text-decoration:none;}
 .menuson{
 	font-weight: bold;
 }
-.menuson li.active a{color:#fff;}
+.menuson li.active a{color:#FFF;}
 .title{
 	cursor:pointer;
 	margin-bottom: 1px;
@@ -196,7 +196,7 @@ a:hover{color:#00a4ac;text-decoration:none;}
 .imglist li:hover{border:solid 1px #d7e4ea;}
 .imglist li span{width:168px; height:126px; margin:8px;}
 .imglist li h2{text-align:center; line-height:25px;}
-.imglist li p{text-align:center; line-height:17px; background:url(../images/line1.png) center center no-repeat;}
+.imglist li p{text-align:center; line-height:17px; background:url(../../images/line1.png) center center no-repeat;}
 .imglist li p a{color:#1f7cb6;}
 .imglist li p a:hover{color:#F60;}
 
@@ -232,7 +232,7 @@ a:hover{color:#00a4ac;text-decoration:none;}
 
 /*imgtable*/
 .imgtable{width:100%;border:solid 1px #cbcbcb; }
-.imgtable th{background:url(../images/th.gif) repeat-x; height:34px; line-height:34px; border-bottom:solid 1px #b6cad2; text-indent:21px; text-align:left;}
+.imgtable th{background:url(../../images/th.gif) repeat-x; height:34px; line-height:34px; border-bottom:solid 1px #b6cad2; text-indent:21px; text-align:left;}
 .imgtable td{
 	line-height:35px;
 	text-indent:21px;
@@ -272,7 +272,6 @@ a:hover{color:#00a4ac;text-decoration:none;}
 	border-radius:2px;
 	box-shadow: 1px 1px 1px #eee;
 	background-color: #FDEDB5;
-	background-image: url(zy.png);
 	background-repeat: no-repeat;
 	background-position: left center;
 	padding-top: 10px;
@@ -323,6 +322,6 @@ a:hover{color:#00a4ac;text-decoration:none;}
 	margin-right: auto;
 }
 .menuson li a:hover {
-	background-image: url(/image/membercenter/libg.png);
-	color: #FFF;
+	background-image: url(../../image/membercenter/libg.png);
+	color: #FFF
 }

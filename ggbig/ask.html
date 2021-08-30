@@ -6,15 +6,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>健身網站 &mdash; SLOGAN</title>
-    <link rel="icon" href="./image/home/ah0sl-3nsav-001.ico" type="image/x-icon">
-	<link rel="icon" href="./image/home/ah0sl-3nsav-001.ico" type="image/x-icon">
-	<link rel="shortcut icon" href="./images/home/ah0sl-3nsav-001.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/membetcenter/centerstyle.css"/>
+  <link rel="icon" href="./image/home/ah0sl-3nsav-001.ico" type="image/x-icon">
+  <link rel="icon" href="./image/home/ah0sl-3nsav-001.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./images/home/ah0sl-3nsav-001.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/membetcenter/centerstyle.css" />
   <link rel="stylesheet" href="css/home/nav-footer.css">
   <!-- font awesome金鑰 -->
   <script src="https://kit.fontawesome.com/29450e8ffe.js" crossorigin="anonymous"></script>
 
-  
+
   <script src="https://code.jquery.com/jquery-3.6.0.js"> </script>
   <script type="text/javascript">
     $(function () {
@@ -57,7 +57,7 @@
   <div class="nav">
     <label class="logo">健身網站</label>
     <ul>
-      <li><a href="./home.html" class="active">首頁</a></li>
+      <li><a href="./index.html" class="active">首頁</a></li>
       <li><a href="./about.html">關於我</a></li>
       <li><a href="./article.html">健身文章</a></li>
       <li><a href="./film.html">健身影片</a></li>
@@ -98,8 +98,9 @@
           <div class="title"><span><img src="image/membercenter/leftico03.jpg" width="17" /></span>社群</div>
           <ul class="menuson">
             <li><cite></cite><a href="friends.html">好友名單</a></li>
-            <li><cite></cite><a href="friendsAdd.html">好友邀請</a></li>
+            <li><cite></cite><a href="friendsAdd.html">好友新增</a></li>
             <li><cite></cite><a href="friendsDel.Html">好友刪除</a></li>
+            <li><cite></cite><a href="friendsInvite.html">好友邀請</a></li>
           </ul>
         </dd>
 
@@ -118,45 +119,44 @@
         </ul>
       </div>
       <div class="formbody">
-
-
         <div id="usual1" class="usual">
           <div id="tab1" class="tabson">
             <ul class="forminfo">
               <li>
-                <label>標題</label>
-                <input name="" type="text" class="dfinput" style="width:518px;" />
+                <label>姓名</label>
+                <input id="nameText" name="Name" type="text" class="dfinput" style="width:300px;" />
               </li>
-
+              <li>
+                <label>Email</label>
+                <input id="emailText" name="Email" type="email" class="dfinput" style="width:300px;" />
+              </li>
               <li>
                 <label>問題類型</label>
-
-
                 <div class="vocation">
                   <select class="ask1">
                     <option>會員問題</option>
+                    <option>健身問題</option>
                     <option>其他問題</option>
-
                   </select>
                 </div>
-
+              </li>
+              <li>
+                <label>標題</label>
+                <input id="subText" name="Subject" type="text" class="dfinput" style="width:503px;" />
               </li>
               <li>
                 <label>內容</label>
-
-
-                <textarea name="" cols="" rows="" class="textinput"></textarea>
-
+                <textarea id="bodyText" name="Body" class="textinput"></textarea>
               </li>
-              <li><label>&nbsp;</label><input name="" type="button" class="btn" value="送出" /></li>
+              <li><label>&nbsp;</label><input name="" type="button" class="btn" value="送出訊息" /></li>
             </ul>
           </div>
         </div>
+        </form>
       </div>
     </div>
     <div class="clear"></div>
   </div>
-
   <!-- 頁尾 -->
   <footer>
     <div class="footer-content">
@@ -172,6 +172,7 @@
         <li><a href="#"><i class="fa fa-twitter"></i></a></li>
       </ul>
     </div>
+  </footer>
 </body>
 
 </html>
