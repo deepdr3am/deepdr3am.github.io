@@ -1,5 +1,5 @@
 [{
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target" : { "namespace": "android_app", "package_name": "com.fxgames.lobbytest",
-                 "sha256_cert_fingerprints": ["93:7E:5E:95:E9:F9:CF:A3:BE:EB:BD:7C:78:BE:55:0F:1E:B1:85:7B:53:B2:5E:3B:4C:A8:3E:4A:52:1F:94:C2"] }
+                 "sha256_cert_fingerprints": ["2A:DA:FE:84:72:93:E1:E2:4F:0D:51:C0:AA:4E:AB:C6:14:45:94:79:83:AF:92:40:C1:6E:EF:6D:1A:F0:B9:D8"] }
   }]
