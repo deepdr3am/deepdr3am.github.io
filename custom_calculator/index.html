@@ -125,7 +125,7 @@
                 document.getElementById('variableList').innerHTML += `
                     <div class="variable-item">
                         <span>${variableName}:</span>
-                        <input type="number" id="${variableName}" value="${variables[variableName]}" onchange="updateResult() inputmode="numeric"">
+                        <input type="number" id="${variableName}" value="${variables[variableName]}" onchange="updateResult()" inputmode="numeric">
                     </div>
                 `;
             }
