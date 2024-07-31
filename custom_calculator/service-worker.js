@@ -2,9 +2,9 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open('v1').then(function(cache) {
             return cache.addAll([
-                '/',
-                '/index.html',
-                '/manifest.json'
+                '/custom_calculator/',
+                '/custom_calculator/index.html',
+                '/custom_calculator/manifest.json'
             ]);
         })
     );
