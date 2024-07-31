@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
+    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>變數計算器</title>
@@ -13,6 +15,7 @@
             padding: 20px;
             line-height: 1.6;
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -21,11 +24,15 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             text-align: center;
             margin-bottom: 20px;
         }
-        input, button, select {
+
+        input,
+        button,
+        select {
             padding: 10px;
             margin-bottom: 15px;
             border: none;
@@ -33,30 +40,39 @@
             background-color: #3a3a3a;
             color: #ffffff;
         }
-        input[type="text"], input[type="number"] {
+
+        input[type="text"],
+        input[type="number"] {
             width: calc(100% - 20px);
         }
+
         button {
             width: 100%;
             background-color: #4CAF50;
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #45a049;
         }
-        #variableList, #formulaBuilder {
+
+        #variableList,
+        #formulaBuilder {
             margin-bottom: 20px;
         }
+
         .variable-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
+
         .variable-item input {
             width: 60%;
         }
+
         #result {
             font-size: 18px;
             font-weight: bold;
@@ -66,6 +82,7 @@
             background-color: #3a3a3a;
             border-radius: 4px;
         }
+
         #formulaBuilder {
             display: flex;
             flex-wrap: nowrap;
@@ -73,16 +90,20 @@
             white-space: nowrap;
             padding-bottom: 10px;
         }
+
         #formulaBuilder input[type="number"] {
             width: 60px;
             margin-right: 5px;
         }
+
         #formulaBuilder select {
             margin-right: 5px;
         }
+
         #formulaBuilder span {
             margin-right: 10px;
         }
+
         .hint {
             color: #888;
             font-style: italic;
@@ -90,6 +111,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>變數計算器</h1>
@@ -194,5 +216,16 @@
             document.getElementById('result').textContent = '';
         }
     </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(function (error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+    </script>
 </body>
+
 </html>
