@@ -115,105 +115,75 @@
 <body>
     <div class="container">
         <h1>變數計算器</h1>
-        <div class="hint">首先，請添加您需要的變數</div>
-        <input type="text" id="newVariable" placeholder="新變數名稱">
-        <button onclick="addVariable()">添加變數</button>
+        <div>
+            <input type="text" id="expression" placeholder="輸入算式 (例如 2a + 3b =)">
+            <button onclick="parseExpression()">解析算式</button>
+        </div>
         <div id="variableList"></div>
-        <div class="hint">設置變數的值和係數，然後點擊計算</div>
-        <div id="formulaBuilder"></div>
-        <button onclick="calculate()">計算</button>
-        <button onclick="resetCalculator()">重置</button>
         <div id="result"></div>
     </div>
 
     <script>
         let variables = {};
 
-        function addVariable() {
-            const name = document.getElementById('newVariable').value.trim();
-            if (name && !(name in variables)) {
-                variables[name] = 0;
-                updateVariableList();
-                updateFormulaBuilder();
-            }
-            document.getElementById('newVariable').value = '';
-        }
-
-        function updateVariableList() {
-            const list = document.getElementById('variableList');
-            list.innerHTML = '';
-            for (let name in variables) {
-                list.innerHTML += `
+        function parseExpression() {
+            const expression = document.getElementById('expression').value.trim();
+            const expressionWithoutEqual = expression.split('=')[0].trim();
+            variables = {};
+            document.getElementById('variableList').innerHTML = '';
+            const regex = /([+-]?\d*\.?\d*)\s*([a-zA-Z])/g; // 正則表達式匹配係數和變數
+            let match;
+            while ((match = regex.exec(expressionWithoutEqual)) !== null) {
+                const coefficient = match[1] === '' || match[1] === '+' ? '1' : (match[1] === '-' ? '-1' : match[1]);
+                const variableName = match[2];
+                variables[variableName] = 0; // 初始化變數
+                document.getElementById('variableList').innerHTML += `
                     <div class="variable-item">
-                        <span>${name}:</span>
-                        <input type="number" id="${name}" value="${variables[name]}" onchange="updateVariable('${name}', this.value)">
+                        <span>${variableName}:</span>
+                        <input type="number" id="${variableName}" value="${variables[variableName]}" onchange="updateResult()">
                     </div>
                 `;
             }
+            document.getElementById('result').textContent = '';
+            updateResult(); // 解析後立即更新結果
         }
 
-        function updateVariable(name, value) {
-            variables[name] = parseFloat(value) || 0;
-        }
-
-        function updateFormulaBuilder() {
-            const builder = document.getElementById('formulaBuilder');
-            builder.innerHTML = '';
-            let isFirst = true;
-            for (let name in variables) {
-                if (!isFirst) {
-                    builder.innerHTML += `
-                        <select onchange="updateFormula()">
-                            <option value="+">+</option>
-                            <option value="-">-</option>
-                        </select>
-                    `;
-                }
-                builder.innerHTML += `
-                    <input type="number" placeholder="係數" onchange="updateFormula()">
-                    <span>${name}</span>
-                `;
-                isFirst = false;
-            }
-        }
-
-        function updateFormula() {
-            const inputs = document.querySelectorAll('#formulaBuilder input[type="number"]');
-            const selects = document.querySelectorAll('#formulaBuilder select');
-            let formula = '';
-            inputs.forEach((input, index) => {
-                if (index > 0) {
-                    formula += selects[index - 1].value;
-                }
-                const coefficient = input.value || '1';
-                const variableName = Object.keys(variables)[index];
-                formula += `${coefficient} * ${variableName}`;
-            });
-            return formula;
-        }
-
-        function calculate() {
+        function updateResult() {
             if (Object.keys(variables).length === 0) {
-                alert('請先添加至少一個變數');
+                alert('請先輸入有效的算式');
                 return;
             }
-            const formula = updateFormula();
+            
+            // 更新 variables 物件中的值
+            for (let varName in variables) {
+                const inputElement = document.getElementById(varName);
+                if (inputElement) {
+                    variables[varName] = parseFloat(inputElement.value) || 0; // 確保讀取數值並轉換為浮點數
+                }
+            }
+
+            const expression = document.getElementById('expression').value.trim().split('=')[0]; // 取等號左側的部分
+
+            // 準備解析的算式
+            let cleanedExpression = expression.replace(/\s+/g, ' '); // 清除多餘空格
+
+            // 將變數名及其係數轉換為有效的運算式
+            cleanedExpression = cleanedExpression.replace(/([0-9]*)([a-zA-Z])/g, (_, coef, varName) => {
+                coef = coef === '' ? '1' : coef;
+                return `${coef} * ${variables[varName]}`; // 確保使用變數的當前值
+            });
+
+            console.log("計算表達式:", cleanedExpression); // 調試信息
+
             let result;
             try {
-                const fn = new Function(...Object.keys(variables), `return ${formula}`);
+                const fn = new Function(...Object.keys(variables), `return ${cleanedExpression}`);
                 result = fn(...Object.values(variables));
             } catch (error) {
-                result = "計算錯誤: " + error.message;
+                console.error("計算錯誤:", error);
+                result = "計算錯誤";
             }
             document.getElementById('result').textContent = `結果: ${result}`;
-        }
-
-        function resetCalculator() {
-            variables = {};
-            document.getElementById('newVariable').value = '';
-            document.getElementById('variableList').innerHTML = '';
-            document.getElementById('formulaBuilder').innerHTML = '';
-            document.getElementById('result').textContent = '';
         }
     </script>
     <script>
