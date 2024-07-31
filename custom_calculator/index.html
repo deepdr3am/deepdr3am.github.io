@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>變數計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input, button, select {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: #ffffff;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 20px);
+        }
+        button {
+            width: 100%;
+            background-color: #4CAF50;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #variableList, #formulaBuilder {
+            margin-bottom: 20px;
+        }
+        .variable-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .variable-item input {
+            width: 60%;
+        }
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border-radius: 4px;
+        }
+        #formulaBuilder {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 10px;
+        }
+        #formulaBuilder input[type="number"] {
+            width: 60px;
+            margin-right: 5px;
+        }
+        #formulaBuilder select {
+            margin-right: 5px;
+        }
+        #formulaBuilder span {
+            margin-right: 10px;
+        }
+        .hint {
+            color: #888;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>變數計算器</h1>
+        <div class="hint">首先，請添加您需要的變數</div>
+        <input type="text" id="newVariable" placeholder="新變數名稱">
+        <button onclick="addVariable()">添加變數</button>
+        <div id="variableList"></div>
+        <div class="hint">設置變數的值和係數，然後點擊計算</div>
+        <div id="formulaBuilder"></div>
+        <button onclick="calculate()">計算</button>
+        <button onclick="resetCalculator()">重置</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let variables = {};
+
+        function addVariable() {
+            const name = document.getElementById('newVariable').value.trim();
+            if (name && !(name in variables)) {
+                variables[name] = 0;
+                updateVariableList();
+                updateFormulaBuilder();
+            }
+            document.getElementById('newVariable').value = '';
+        }
+
+        function updateVariableList() {
+            const list = document.getElementById('variableList');
+            list.innerHTML = '';
+            for (let name in variables) {
+                list.innerHTML += `
+                    <div class="variable-item">
+                        <span>${name}:</span>
+                        <input type="number" id="${name}" value="${variables[name]}" onchange="updateVariable('${name}', this.value)">
+                    </div>
+                `;
+            }
+        }
+
+        function updateVariable(name, value) {
+            variables[name] = parseFloat(value) || 0;
+        }
+
+        function updateFormulaBuilder() {
+            const builder = document.getElementById('formulaBuilder');
+            builder.innerHTML = '';
+            let isFirst = true;
+            for (let name in variables) {
+                if (!isFirst) {
+                    builder.innerHTML += `
+                        <select onchange="updateFormula()">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                    `;
+                }
+                builder.innerHTML += `
+                    <input type="number" placeholder="係數" onchange="updateFormula()">
+                    <span>${name}</span>
+                `;
+                isFirst = false;
+            }
+        }
+
+        function updateFormula() {
+            const inputs = document.querySelectorAll('#formulaBuilder input[type="number"]');
+            const selects = document.querySelectorAll('#formulaBuilder select');
+            let formula = '';
+            inputs.forEach((input, index) => {
+                if (index > 0) {
+                    formula += selects[index - 1].value;
+                }
+                const coefficient = input.value || '1';
+                const variableName = Object.keys(variables)[index];
+                formula += `${coefficient} * ${variableName}`;
+            });
+            return formula;
+        }
+
+        function calculate() {
+            if (Object.keys(variables).length === 0) {
+                alert('請先添加至少一個變數');
+                return;
+            }
+            const formula = updateFormula();
+            let result;
+            try {
+                const fn = new Function(...Object.keys(variables), `return ${formula}`);
+                result = fn(...Object.values(variables));
+            } catch (error) {
+                result = "計算錯誤: " + error.message;
+            }
+            document.getElementById('result').textContent = `結果: ${result}`;
+        }
+
+        function resetCalculator() {
+            variables = {};
+            document.getElementById('newVariable').value = '';
+            document.getElementById('variableList').innerHTML = '';
+            document.getElementById('formulaBuilder').innerHTML = '';
+            document.getElementById('result').textContent = '';
+        }
+    </script>
+</body>
+</html>
