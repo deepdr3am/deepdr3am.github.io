@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 生日快樂！ - Birthday Surprise</title>
+    <link rel="stylesheet" href="birthday-surprise.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 彩帶動畫背景 -->
+    <div class="confetti-container">
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+    </div>
+
+    <!-- 氣球裝飾 -->
+    <div class="balloons">
+        <div class="balloon balloon-1">🎈</div>
+        <div class="balloon balloon-2">🎈</div>
+        <div class="balloon balloon-3">🎈</div>
+        <div class="balloon balloon-4">🎈</div>
+        <div class="balloon balloon-5">🎈</div>
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="container">
+        <!-- 大標題 -->
+        <div class="birthday-header">
+            <h1 class="birthday-title">
+                🎉 生日快樂！ 🎉
+            </h1>
+            <p class="birthday-subtitle">Happy Birthday to You!</p>
+        </div>
+
+        <!-- 生日卡片 -->
+        <div class="birthday-card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-header">
+                        <i class="fas fa-gift gift-icon"></i>
+                        <h2>特別的驚喜</h2>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="birthday-message">
+                            <p>🎂 親愛的潘小姐～生日快樂！</p>
+                            <p>💝 去年的生日在韓國沒能跟你一起過</p>
+                            <p>🌟 今年的生日我們一起在韓國過</p>
+                            <p>🎊 祝您心想事成！</p>
+                        </div>
+
+                        <div class="cake-animation">
+                            <div class="cake">
+                                <div class="cake-layer cake-top"></div>
+                                <div class="cake-layer cake-middle"></div>
+                                <div class="cake-layer cake-bottom"></div>
+                                <div class="candle">
+                                    <div class="flame"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 包裹內容區域 -->
+                    <div class="package-section">
+                        <h3>
+                            <i class="fas fa-gift"></i>
+                            包裹內容預覽
+                        </h3>
+                        <div class="package-container">
+                            <div class="package-preview" onclick="openPackageModal()">
+                                <img src="package.png" alt="包裹內容" id="packageImage" />
+                                <div class="preview-overlay">
+                                    <i class="fas fa-search-plus"></i>
+                                    <span>點擊查看完整內容</span>
+                                </div>
+                            </div>
+                            <p class="package-hint">
+                                <i class="fas fa-mouse-pointer"></i>
+                                點擊圖片查看詳細內容
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 生日祝福語 -->
+        <div class="birthday-wishes">
+            <div class="wish-item">
+                <i class="fas fa-star"></i>
+                <span>願您的每一天都如今日般精彩！</span>
+            </div>
+            <div class="wish-item">
+                <i class="fas fa-heart"></i>
+                <span>希望快樂與您常伴，幸福與您相隨！</span>
+            </div>
+            <div class="wish-item">
+                <i class="fas fa-gift"></i>
+                <span>祝您在新的一歲裡收穫滿滿的驚喜！</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 包裹內容彈出視窗 -->
+    <div id="packageModal" class="package-modal">
+        <div class="modal-backdrop" onclick="closePackageModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-gift"></i>
+                    您的生日驚喜包裹
+                </h3>
+                <button class="modal-close" onclick="closePackageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="package.png" alt="包裹完整內容" class="modal-image" />
+                <div class="package-info">
+                    <h4>🎁 特別為您準備的生日驚喜</h4>
+                    <p>希望這份禮物能為您的生日增添更多歡樂！</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" onclick="closePackageModal()">
+                    <i class="fas fa-heart"></i>
+                    謝謝您的驚喜
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮動裝飾 -->
+    <div class="floating-decorations">
+        <div class="star star-1">⭐</div>
+        <div class="star star-2">✨</div>
+        <div class="star star-3">💫</div>
+        <div class="star star-4">⭐</div>
+        <div class="star star-5">✨</div>
+        <div class="heart heart-1">💖</div>
+        <div class="heart heart-2">💕</div>
+        <div class="heart heart-3">💖</div>
+    </div>
+
+    <script src="birthday-surprise.js"></script>
+</body>
+</html>

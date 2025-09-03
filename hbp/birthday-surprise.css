@@ -1,0 +1,733 @@
+/* 全域樣式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 基礎樣式 */
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* 彩帶動畫 */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ff6b6b;
+    animation: confetti-fall 3s linear infinite;
+}
+
+.confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #ff6b6b; }
+.confetti:nth-child(2) { left: 20%; animation-delay: 0.2s; background: #ffd93d; }
+.confetti:nth-child(3) { left: 30%; animation-delay: 0.4s; background: #6bcf7f; }
+.confetti:nth-child(4) { left: 40%; animation-delay: 0.6s; background: #4d96ff; }
+.confetti:nth-child(5) { left: 50%; animation-delay: 0.8s; background: #ff6b6b; }
+.confetti:nth-child(6) { left: 60%; animation-delay: 1s; background: #ffd93d; }
+.confetti:nth-child(7) { left: 70%; animation-delay: 1.2s; background: #6bcf7f; }
+.confetti:nth-child(8) { left: 80%; animation-delay: 1.4s; background: #4d96ff; }
+.confetti:nth-child(9) { left: 90%; animation-delay: 1.6s; background: #ff6b6b; }
+.confetti:nth-child(10) { left: 15%; animation-delay: 1.8s; background: #ffd93d; }
+.confetti:nth-child(11) { left: 25%; animation-delay: 2s; background: #6bcf7f; }
+.confetti:nth-child(12) { left: 35%; animation-delay: 2.2s; background: #4d96ff; }
+.confetti:nth-child(13) { left: 45%; animation-delay: 2.4s; background: #ff6b6b; }
+.confetti:nth-child(14) { left: 55%; animation-delay: 2.6s; background: #ffd93d; }
+.confetti:nth-child(15) { left: 65%; animation-delay: 2.8s; background: #6bcf7f; }
+.confetti:nth-child(16) { left: 75%; animation-delay: 3s; background: #4d96ff; }
+.confetti:nth-child(17) { left: 85%; animation-delay: 3.2s; background: #ff6b6b; }
+.confetti:nth-child(18) { left: 95%; animation-delay: 3.4s; background: #ffd93d; }
+.confetti:nth-child(19) { left: 5%; animation-delay: 3.6s; background: #6bcf7f; }
+.confetti:nth-child(20) { left: 95%; animation-delay: 3.8s; background: #4d96ff; }
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotateZ(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotateZ(360deg);
+        opacity: 0;
+    }
+}
+
+/* 氣球裝飾 */
+.balloons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.balloon {
+    position: absolute;
+    font-size: 3rem;
+    animation: balloon-float 4s ease-in-out infinite;
+}
+
+.balloon-1 { left: 5%; top: 10%; color: #ff6b6b; animation-delay: 0s; }
+.balloon-2 { left: 15%; top: 20%; color: #ffd93d; animation-delay: 1s; }
+.balloon-3 { right: 15%; top: 15%; color: #6bcf7f; animation-delay: 2s; }
+.balloon-4 { right: 5%; top: 25%; color: #4d96ff; animation-delay: 3s; }
+.balloon-5 { left: 50%; top: 5%; color: #ff6b6b; animation-delay: 4s; }
+
+@keyframes balloon-float {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* 生日標題 */
+.birthday-header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: title-bounce 2s ease-out;
+}
+
+.birthday-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rainbow-text 3s ease-in-out infinite;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+}
+
+.birthday-subtitle {
+    font-size: 1.5rem;
+    color: #666;
+    font-style: italic;
+    opacity: 0;
+    animation: fade-in-up 1s ease-out 0.5s forwards;
+}
+
+@keyframes title-bounce {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(-10deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes rainbow-text {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fade-in-up {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 生日卡片 */
+.birthday-card {
+    max-width: 800px;
+    margin: 0 auto 50px;
+    perspective: 1000px;
+    animation: card-entrance 1s ease-out 1s both;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card-front {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.8);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-front::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+    border-radius: 25px;
+    z-index: -1;
+    animation: border-rainbow 3s linear infinite;
+}
+
+@keyframes border-rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes card-entrance {
+    from { transform: rotateY(-90deg) scale(0.5); opacity: 0; }
+    to { transform: rotateY(0deg) scale(1); opacity: 1; }
+}
+
+/* 卡片標題 */
+.card-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.gift-icon {
+    font-size: 3rem;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    animation: gift-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gift-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.card-header h2 {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+}
+
+/* 卡片內容 */
+.card-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+
+
+.birthday-message p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: message-appear 0.8s ease-out forwards;
+}
+
+.birthday-message p:nth-child(1) { animation-delay: 1.5s; }
+.birthday-message p:nth-child(2) { animation-delay: 1.7s; }
+.birthday-message p:nth-child(3) { animation-delay: 1.9s; }
+.birthday-message p:nth-child(4) { animation-delay: 2.1s; }
+
+@keyframes message-appear {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* 蛋糕動畫 */
+.cake-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cake {
+    position: relative;
+    animation: cake-bounce 3s ease-in-out infinite;
+}
+
+.cake-layer {
+    border-radius: 10px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.cake-bottom {
+    width: 120px;
+    height: 40px;
+    background: linear-gradient(135deg, #8B4513, #D2691E);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cake-middle {
+    width: 100px;
+    height: 35px;
+    background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+    margin-top: -5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cake-top {
+    width: 80px;
+    height: 30px;
+    background: linear-gradient(135deg, #98FB98, #90EE90);
+    margin-top: -5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.candle {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 20px;
+    background: #FFD700;
+    border-radius: 3px;
+}
+
+.flame {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 12px;
+    background: radial-gradient(circle, #FFA500 0%, #FF4500 70%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flame-flicker 1s ease-in-out infinite alternate;
+}
+
+@keyframes cake-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes flame-flicker {
+    0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+    100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+}
+
+/* 包裹內容區域 */
+.package-section {
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    border: 2px solid #4d96ff;
+}
+
+.package-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.package-section h3 i {
+    color: #4d96ff;
+    font-size: 1.8rem;
+}
+
+.package-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.package-preview {
+    width: 250px;
+    height: 250px;
+    background: white;
+    border: 3px solid #4d96ff;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(77, 150, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.package-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(77, 150, 255, 0.3);
+}
+
+.package-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.package-preview:hover img {
+    transform: scale(1.1);
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(77, 150, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 12px;
+}
+
+.package-preview:hover .preview-overlay {
+    opacity: 1;
+}
+
+.preview-overlay i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.preview-overlay span {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.package-hint {
+    color: #666;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.package-hint i {
+    color: #4d96ff;
+}
+
+/* 包裹彈出視窗 */
+.package-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: modal-fade-in 0.3s ease-out;
+}
+
+.package-modal.show {
+    display: flex;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 90vw;
+    max-height: 90vh;
+    width: 600px;
+    margin: 20px;
+    animation: modal-slide-up 0.3s ease-out;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 25px 25px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-body {
+    padding: 30px;
+    text-align: center;
+}
+
+.modal-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 25px;
+}
+
+.package-info h4 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.package-info p {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.modal-footer {
+    padding: 20px 30px 30px;
+    text-align: center;
+}
+
+.modal-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+}
+
+.modal-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+}
+
+@keyframes modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modal-slide-up {
+    from { transform: translateY(50px) scale(0.9); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* 生日祝福語 */
+.birthday-wishes {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.wish-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: wish-appear 0.8s ease-out forwards;
+    backdrop-filter: blur(10px);
+}
+
+.wish-item:nth-child(1) { animation-delay: 2.5s; }
+.wish-item:nth-child(2) { animation-delay: 2.7s; }
+.wish-item:nth-child(3) { animation-delay: 2.9s; }
+
+.wish-item i {
+    font-size: 1.5rem;
+    color: #ff6b6b;
+    flex-shrink: 0;
+}
+
+.wish-item span {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+@keyframes wish-appear {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 浮動裝飾 */
+.floating-decorations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.star, .heart {
+    position: absolute;
+    font-size: 2rem;
+    animation: float-decoration 6s ease-in-out infinite;
+}
+
+.star-1 { left: 10%; top: 30%; animation-delay: 0s; }
+.star-2 { right: 10%; top: 40%; animation-delay: 1s; }
+.star-3 { left: 20%; top: 60%; animation-delay: 2s; }
+.star-4 { right: 20%; top: 70%; animation-delay: 3s; }
+.star-5 { left: 50%; top: 80%; animation-delay: 4s; }
+
+.heart-1 { left: 15%; top: 50%; animation-delay: 1.5s; }
+.heart-2 { right: 15%; top: 60%; animation-delay: 2.5s; }
+.heart-3 { left: 60%; top: 90%; animation-delay: 3.5s; }
+
+@keyframes float-decoration {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-15px) rotate(120deg); }
+    66% { transform: translateY(-10px) rotate(240deg); }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 15px;
+    }
+    
+    .birthday-title {
+        font-size: 2.5rem;
+    }
+    
+    .birthday-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .card-front {
+        padding: 25px;
+    }
+    
+    .card-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .package-preview {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .balloon {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .birthday-title {
+        font-size: 2rem;
+    }
+    
+    .card-front {
+        padding: 20px;
+    }
+    
+    .birthday-message p {
+        font-size: 1rem;
+    }
+    
+    .package-preview {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5px;
+    }
+    
+    .modal-header {
+        padding: 20px 20px 10px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        padding: 15px 20px 20px;
+    }
+    
+    .wish-item {
+        padding: 15px;
+    }
+
+    .wish-item span {
+        font-size: 1rem;
+    }
+}

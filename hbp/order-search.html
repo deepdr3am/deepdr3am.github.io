@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單查詢 - Order Search</title>
+    <link rel="stylesheet" href="order-search.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 導航欄 -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="index.html" class="nav-back">
+                    <i class="fas fa-arrow-left"></i>
+                    返回FAQ
+                </a>
+                <div class="nav-brand">
+                    <h1>訂單查詢系統</h1>
+                </div>
+                <div class="nav-status">
+                    <i class="fas fa-wifi"></i>
+                    在線服務
+                </div>
+            </div>
+        </nav>
+
+        <!-- 查詢區塊 -->
+        <main class="search-section">
+            <div class="search-container">
+                <div class="search-header">
+                    <i class="fas fa-search"></i>
+                    <h2>查詢您的訂單</h2>
+                    <p>請輸入您的訂單編號來查看訂單詳細資訊</p>
+                </div>
+
+                <div class="search-form">
+                    <div class="input-group">
+                        <i class="fas fa-receipt"></i>
+                        <input type="text" id="orderNumber" placeholder="請輸入訂單編號" maxlength="20">
+                        <button type="button" id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                            查詢訂單
+                        </button>
+                    </div>
+                    <div class="input-hint">
+                        <i class="fas fa-info-circle"></i>
+                        訂單編號可在您的確認信件或簡訊中找到
+                    </div>
+                </div>
+
+                <!-- 錯誤訊息 -->
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>找不到此訂單編號，請檢查後重新輸入</span>
+                </div>
+
+                <!-- 載入動畫 -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>正在查詢訂單資訊...</p>
+                </div>
+
+                <!-- 訂單詳細資訊 -->
+                <div id="orderDetails" class="order-details" style="display: none;">
+                    <div class="order-header">
+                        <div class="order-status-badge">
+                            <i class="fas fa-truck" id="statusIcon"></i>
+                            <span id="orderStatus">配送中</span>
+                        </div>
+                        <div class="order-info">
+                            <h3>訂單編號: <span id="displayOrderNumber"></span></h3>
+                            <p>訂購日期: <span id="orderDate"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="order-timeline">
+                        <h4><i class="fas fa-route"></i> 配送進度</h4>
+                        <div class="timeline">
+                            <div class="timeline-item completed">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>訂單確認</h5>
+                                    <p id="step1Time">2024/09/01 14:30</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item completed">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>商品出貨</h5>
+                                    <p id="step2Time">2024/09/02 09:20</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item active">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>運送中</h5>
+                                    <p id="step3Time">預計今日送達</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>已送達</h5>
+                                    <p id="step4Time">等待配送</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-products">
+                        <h4><i class="fas fa-shopping-bag"></i> 訂購商品</h4>
+                        <div class="product-list" id="productList">
+                            <!-- 商品列表將由JavaScript動態生成 -->
+                        </div>
+                    </div>
+
+                    <div class="delivery-info">
+                        <div class="info-section">
+                            <h4><i class="fas fa-map-marker-alt"></i> 配送資訊</h4>
+                            <div class="info-content">
+                                <p><strong>收件人:</strong> <span id="receiverName">王小明</span></p>
+                                <p><strong>聯絡電話:</strong> <span id="receiverPhone">0912-345-678</span></p>
+                                <p><strong>配送地址:</strong> <span id="deliveryAddress">台北市大安區忠孝東路四段123號5樓</span></p>
+                                <p><strong>預計送達:</strong> <span id="estimatedDelivery">今日 16:00-18:00</span></p>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <h4><i class="fas fa-credit-card"></i> 付款資訊</h4>
+                            <div class="info-content">
+                                <p><strong>付款方式:</strong> <span id="paymentMethod">信用卡付款</span></p>
+                                <p><strong>付款狀態:</strong> <span class="payment-status paid" id="paymentStatus">已付款</span></p>
+                                <p><strong>總金額:</strong> <span class="total-amount" id="totalAmount">NT$ 1,280</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-actions">
+                        <button class="action-btn primary" id="trackPackageLocation">
+                            <i class="fas fa-map-marker-alt"></i>
+                            查看包裹位置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="order-search.js"></script>
+</body>
+</html>

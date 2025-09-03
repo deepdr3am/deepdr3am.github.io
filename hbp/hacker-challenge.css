@@ -1,0 +1,639 @@
+/* 全域樣式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 基礎樣式 */
+body {
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    background: #000;
+    color: #00ff00;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* 矩陣背景效果 */
+.matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: 
+        radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%),
+        linear-gradient(90deg, transparent 50%, rgba(0, 255, 0, 0.03) 50%),
+        linear-gradient(0deg, transparent 50%, rgba(0, 255, 0, 0.03) 50%);
+    background-size: 100% 100%, 20px 20px, 20px 20px;
+    animation: matrixScroll 20s linear infinite;
+}
+
+@keyframes matrixScroll {
+    0% { background-position: 0 0, 0 0, 0 0; }
+    100% { background-position: 0 0, 20px 20px, 0 20px; }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 駭客頭部 */
+.hacker-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    border: 2px solid #00ff00;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.glitch-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ff0000;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    animation: glitchAnimation 2s infinite;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-title::before {
+    animation: glitchTop 1s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    color: #00ffff;
+}
+
+.glitch-title::after {
+    animation: glitchBottom 1.5s infinite;
+    clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+    color: #ffff00;
+}
+
+@keyframes glitchAnimation {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+}
+
+@keyframes glitchTop {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, -2px); }
+    40% { transform: translate(-2px, 2px); }
+    60% { transform: translate(2px, -2px); }
+    80% { transform: translate(2px, 2px); }
+}
+
+@keyframes glitchBottom {
+    0%, 100% { transform: translate(0); }
+    25% { transform: translate(2px, 2px); }
+    50% { transform: translate(-2px, -2px); }
+    75% { transform: translate(2px, -2px); }
+}
+
+.status-bar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.status-item {
+    color: #00ff00;
+}
+
+.text-danger {
+    color: #ff0000;
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+/* 終端視窗 */
+.terminal-window {
+    background: #000;
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+.terminal-header {
+    background: #1a1a1a;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #00ff00;
+}
+
+.terminal-title {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.control.minimize { background: #ffff00; }
+.control.maximize { background: #00ff00; }
+.control.close { background: #ff0000; }
+
+.terminal-body {
+    padding: 20px;
+    min-height: 200px;
+    position: relative;
+}
+
+.typed-text {
+    color: #00ff00;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+.cursor {
+    color: #00ff00;
+    animation: cursorBlink 1s infinite;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+@keyframes cursorBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* 開始挑戰按鈕 */
+.start-challenge-btn {
+    background: linear-gradient(45deg, #ff0000, #ff3333);
+    color: white;
+    border: 2px solid #ff0000;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    font-family: 'Orbitron', monospace;
+}
+
+.start-challenge-btn:hover {
+    background: linear-gradient(45deg, #ff3333, #ff6666);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    transform: scale(1.05);
+}
+
+/* 挑戰區域 */
+.challenge-area {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 30px;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.question-counter {
+    text-align: center;
+    color: #ffff00;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.question-container {
+    margin-bottom: 30px;
+}
+
+.question-text {
+    color: #00ffff;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: rgba(0, 255, 255, 0.1);
+    border-left: 4px solid #00ffff;
+    border-radius: 5px;
+}
+
+.answer-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.answer-input input {
+    flex: 1;
+    background: #000;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-family: 'Share Tech Mono', monospace;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.answer-input input:focus {
+    border-color: #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.answer-input button {
+    background: #00ff00;
+    color: #000;
+    border: none;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.answer-input button:hover {
+    background: #33ff33;
+    transform: scale(1.05);
+}
+
+/* 音樂播放器樣式 */
+#audioPlayer {
+    width: 100%;
+    margin: 20px 0;
+    background: rgba(0, 255, 255, 0.1) !important;
+    border: 1px solid #00ffff !important;
+    border-radius: 5px !important;
+    filter: hue-rotate(180deg) brightness(1.2) !important;
+    outline: none !important;
+}
+
+#audioPlayer::-webkit-media-controls-panel {
+    background-color: rgba(0, 255, 255, 0.2) !important;
+}
+
+#audioPlayer::-webkit-media-controls-play-button,
+#audioPlayer::-webkit-media-controls-pause-button {
+    background-color: #00ffff !important;
+    border-radius: 50% !important;
+}
+
+.audio-hint {
+    color: #00ffff !important;
+    text-align: center !important;
+    margin: 10px 0 !important;
+    font-size: 14px !important;
+    animation: pulse 2s infinite !important;
+    padding: 10px !important;
+    background: rgba(0, 255, 255, 0.1) !important;
+    border: 1px dashed #00ffff !important;
+    border-radius: 5px !important;
+}
+
+/* 圖片挑戰樣式 */
+#challengeImage {
+    width: 100% !important;
+    max-width: 400px !important;
+    height: auto !important;
+    margin: 20px auto !important;
+    display: block !important;
+    border: 2px solid #00ffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3) !important;
+    filter: brightness(1.1) contrast(1.2) !important;
+    transition: all 0.3s ease !important;
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+#challengeImage:hover {
+    filter: brightness(1.3) contrast(1.4) !important;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5) !important;
+    transform: scale(1.02) !important;
+}
+
+.image-hint {
+    color: #00ffff !important;
+    text-align: center !important;
+    margin: 15px 0 !important;
+    font-size: 14px !important;
+    animation: pulse 2s infinite !important;
+    padding: 10px !important;
+    background: rgba(0, 255, 255, 0.1) !important;
+    border: 1px dashed #00ffff !important;
+    border-radius: 5px !important;
+}
+
+.feedback {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.feedback.correct {
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid #00ff00;
+}
+
+.feedback.incorrect {
+    color: #ff0000;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid #ff0000;
+}
+
+/* 進度條 */
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #00ff00;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff00, #ffff00);
+    width: 0%;
+    transition: width 0.5s ease;
+    animation: progressPulse 2s infinite;
+}
+
+@keyframes progressPulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 0, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.8); }
+}
+
+/* 最終結果 */
+.final-result {
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.result-window {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00ff00;
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+}
+
+.result-header {
+    margin-bottom: 30px;
+}
+
+.result-header i {
+    font-size: 3rem;
+    color: #00ff00;
+    margin-bottom: 15px;
+}
+
+.result-header h2 {
+    color: #00ff00;
+    font-size: 2rem;
+    font-family: 'Orbitron', monospace;
+    text-transform: uppercase;
+}
+
+.decrypted-message {
+    background: rgba(0, 255, 0, 0.1);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #00ffff;
+    animation: messageGlow 3s infinite;
+}
+
+@keyframes messageGlow {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.6); }
+}
+
+.package-info {
+    text-align: left;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #ffff00;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.package-info h3 {
+    color: #ffff00;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.package-details p {
+    margin-bottom: 10px;
+    color: #00ff00;
+}
+
+.code {
+    background: #ffff00;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+.return-btn {
+    background: linear-gradient(45deg, #00ff00, #33ff33);
+    color: #000;
+    border: 2px solid #00ff00;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    font-family: 'Orbitron', monospace;
+}
+
+.return-btn:hover {
+    background: linear-gradient(45deg, #33ff33, #66ff66);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    transform: scale(1.05);
+}
+
+/* 背景效果 */
+.scanner-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ff00, transparent);
+    animation: scannerMove 3s linear infinite;
+    z-index: -1;
+}
+
+@keyframes scannerMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+}
+
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, transparent 90%, rgba(0, 255, 0, 0.1) 90%),
+        linear-gradient(0deg, transparent 90%, rgba(0, 255, 0, 0.1) 90%);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .glitch-title {
+        font-size: 2rem;
+    }
+    
+    .status-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .challenge-area {
+        padding: 20px;
+    }
+    
+    .question-text {
+        font-size: 1.1rem;
+    }
+    
+    .answer-input {
+        flex-direction: column;
+    }
+    
+    .result-window {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .glitch-title {
+        font-size: 1.5rem;
+    }
+    
+    .terminal-body {
+        padding: 15px;
+        min-height: 150px;
+    }
+    
+    .typed-text {
+        font-size: 1rem;
+    }
+}
+
+/* 生日驚喜按鈕 */
+.birthday-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+    color: white;
+    text-decoration: none;
+    padding: 20px 30px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 30px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: rainbow 3s infinite;
+}
+
+.birthday-link:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.birthday-link i {
+    font-size: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes rainbow {
+    0% { background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff); }
+    25% { background: linear-gradient(135deg, #4d96ff, #ff6b6b, #ffd93d, #6bcf7f); }
+    50% { background: linear-gradient(135deg, #6bcf7f, #4d96ff, #ff6b6b, #ffd93d); }
+    75% { background: linear-gradient(135deg, #ffd93d, #6bcf7f, #4d96ff, #ff6b6b); }
+    100% { background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}

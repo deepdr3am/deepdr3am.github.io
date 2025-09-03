@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM BREACHED - UNAUTHORIZED ACCESS</title>
+    <link rel="stylesheet" href="hacker-challenge.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="container">
+        <!-- 駭客頭部 -->
+        <header class="hacker-header">
+            <div class="glitch-title" data-text="SYSTEM COMPROMISED">SYSTEM COMPROMISED</div>
+            <div class="status-bar">
+                <span class="status-item">STATUS: <span class="text-danger">BREACHED</span></span>
+                <span class="status-item">SECURITY: <span class="text-danger">OFFLINE</span></span>
+                <span class="status-item">TIME: <span id="currentTime"></span></span>
+            </div>
+        </header>
+
+        <!-- 主要內容 -->
+        <main class="challenge-container">
+            <!-- 歡迎訊息 -->
+            <div class="welcome-message" id="welcomeMessage">
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <span class="terminal-title">root@darkweb:~$</span>
+                        <div class="terminal-controls">
+                            <span class="control minimize"></span>
+                            <span class="control maximize"></span>
+                            <span class="control close"></span>
+                        </div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="typed-text" id="typedText"></div>
+                        <div class="cursor">_</div>
+                    </div>
+                </div>
+                
+                <button class="start-challenge-btn" id="startChallenge">
+                    <i class="fas fa-skull-crossbones"></i>
+                    接受挑戰
+                </button>
+            </div>
+
+            <!-- 挑戰問題區域 -->
+            <div class="challenge-area" id="challengeArea" style="display: none;">
+                <div class="question-counter">
+                    問題 <span id="currentQuestion">1</span> / 5
+                </div>
+                
+                <div class="question-container">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="answer-input">
+                        <input type="text" id="answerInput" placeholder="輸入您的答案..." autocomplete="off">
+                        <button id="submitAnswer">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- 最終結果 -->
+            <div class="final-result" id="finalResult" style="display: none;">
+                <div class="result-window">
+                    <div class="result-header">
+                        <i class="fas fa-check-circle"></i>
+                        <h2>挑戰完成</h2>
+                    </div>
+                    <div class="result-body">
+                        <div class="decrypted-message" id="decryptedMessage"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 背景效果 -->
+        <div class="bg-effects">
+            <div class="scanner-line"></div>
+            <div class="grid-overlay"></div>
+        </div>
+    </div>
+
+    <script src="hacker-challenge.js"></script>
+</body>
+</html>
