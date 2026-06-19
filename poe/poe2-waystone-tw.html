@@ -163,16 +163,36 @@
     background:var(--ember); color:#1a1206; font-weight:700; padding:10px 20px; border-radius:10px;
     font-size:14px; opacity:0; pointer-events:none; transition:.25s; box-shadow:0 8px 24px #0008}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  /* 分頁切換 */
+  .tabs{display:flex; gap:6px; margin:18px 0 4px; border-bottom:1px solid var(--line)}
+  .tab{font-family:var(--tc); font-size:15px; font-weight:600; letter-spacing:.04em;
+       background:transparent; border:0; color:var(--ink-faint); cursor:pointer;
+       padding:11px 20px 13px; border-bottom:2px solid transparent; margin-bottom:-1px; transition:.15s}
+  .tab:hover{color:var(--ink-dim)}
+  .tab.on{color:var(--ember); border-bottom-color:var(--ember)}
+  .view{display:none}
+  .view.on{display:block}
+  .catbar{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
+  .catbar button{font-family:var(--tc); font-size:12px; padding:5px 11px; border-radius:999px;
+       background:transparent; border:1px solid var(--line); color:var(--ink-faint); cursor:pointer}
+  .catbar button.on{background:var(--ember-d); border-color:var(--ember-d); color:#1a1206; font-weight:600}
+  .mod .num.mini{width:62px; padding:4px 7px; font-size:12px; margin-left:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="eyebrow">Path of Exile 2 · 台服 / 繁體中文</div>
-    <h1>換界石 <span class="b">正則</span>產生器</h1>
-    <p class="sub">勾選想要與想排除的詞綴，自動產生可貼進台服倉庫搜尋框的正則。詞綴文字皆可即時修改，正則會跟著重算。</p>
+    <h1>台服 <span class="b">正則</span>產生器</h1>
+    <p class="sub">勾選想要的詞綴，自動產生可貼進台服倉庫搜尋框的正則。詞綴文字皆可即時修改，正則會跟著重算。</p>
   </header>
 
+  <div class="tabs">
+    <button class="tab on" data-v="ws">換界石</button>
+    <button class="tab" data-v="tab">碑牌</button>
+  </div>
+
+  <div class="view on" id="view-ws">
   <div class="result-dock">
     <div class="result">
       <div class="r-top">
@@ -301,11 +321,120 @@
       </div>
     </div>
   </div>
+  </div><!-- /view-ws -->
+
+  <!-- ============ 碑牌 view ============ -->
+  <div class="view" id="view-tab">
+  <div class="result-dock">
+    <div class="result">
+      <div class="r-top">
+        <span class="label">產生的正則</span>
+        <span class="count" id="count_t">0 字元</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:stretch">
+        <div class="regexbox" id="regexbox_t"><span class="ph">在下方勾選碑牌詞綴後，正則會顯示在這裡…</span></div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <button class="btn primary copybtn" id="copy_t">複製</button>
+          <button class="btn" id="reset_t">清除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- tablet mods -->
+    <div class="panel">
+      <div class="panel-h">
+        <h2>碑牌詞綴</h2>
+        <span class="hint" id="modcount_t"></span>
+      </div>
+      <div class="toolrow">
+        <input class="search" id="search_t" placeholder="搜尋詞綴（中文 / 關鍵字）…">
+        <div class="seg" id="matchmode_t">
+          <button data-m="any" class="on">任一即可</button>
+          <button data-m="all">全部都要</button>
+        </div>
+      </div>
+      <div class="toolrow" style="border-top:0; padding-top:0">
+        <div class="catbar" id="catfilter_t"></div>
+      </div>
+      <div class="mods" id="mods_t"></div>
+    </div>
+
+    <!-- tablet controls -->
+    <div>
+      <div class="panel">
+        <div class="panel-h"><h2>篩選條件</h2></div>
+        <div class="panel-b">
+
+          <div class="ctl">
+            <span class="lab">稀有度</span>
+            <div class="chips" id="rarity_t">
+              <button class="chip" data-k="normal">普通</button>
+              <button class="chip" data-k="magic">魔法</button>
+              <button class="chip" data-k="rare">稀有</button>
+            </div>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">碑牌類型（任選；可複選）</span>
+            <div class="chips" id="type_t">
+              <button class="chip" data-k="breach">裂痕</button>
+              <button class="chip" data-k="delirium">譫妄</button>
+              <button class="chip" data-k="expedition">探險</button>
+              <button class="chip" data-k="ritual">祭祀</button>
+              <button class="chip" data-k="irradiated">輻照</button>
+              <button class="chip" data-k="overseer">總督</button>
+              <button class="chip" data-k="abyss">深淵</button>
+              <button class="chip" data-k="temple">神廟</button>
+            </div>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">剩餘使用次數（≥）</span>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-dim);cursor:pointer">
+              <input type="checkbox" id="uses_en">啟用
+              <input class="num" id="uses_n" type="number" min="1" max="18" placeholder="1–18" style="width:90px">
+            </label>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">詞綴數值門檻</span>
+            <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-dim);cursor:pointer">
+              <input type="checkbox" id="round10_t"> 數值無條件捨去到 10（更寬鬆）
+            </label>
+            <p class="hint" style="margin:2px 0 0">在右側詞綴列每條後面的小框填數字，可要求「≥ 該數值 %」。留空＝只要有該詞綴即可。</p>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">自訂文字（直接附加）</span>
+            <textarea class="custom" id="custom_t" placeholder='例如： "iLvl: 8"'></textarea>
+          </div>
+
+          <details class="adv">
+            <summary>進階：碑牌類型 / 次數的搜尋字串（遊戲內用詞不同可在此修正）</summary>
+            <div class="kv"><label>裂痕</label><input id="ta_breach" value="裂痕"></div>
+            <div class="kv"><label>譫妄</label><input id="ta_delirium" value="譫妄"></div>
+            <div class="kv"><label>探險</label><input id="ta_expedition" value="探險"></div>
+            <div class="kv"><label>祭祀</label><input id="ta_ritual" value="祭祀"></div>
+            <div class="kv"><label>輻照</label><input id="ta_irradiated" value="輻照"></div>
+            <div class="kv"><label>總督</label><input id="ta_overseer" value="總督"></div>
+            <div class="kv"><label>深淵</label><input id="ta_abyss" value="深淵"></div>
+            <div class="kv"><label>神廟</label><input id="ta_temple" value="神廟"></div>
+            <div class="kv"><label>稀有度錨點</label><input id="ta_rarity" value="稀有度: "></div>
+            <div class="kv"><label>使用次數錨點</label><input id="ta_uses" value="次"></div>
+            <div style="margin-top:10px"><button class="clearbtn" id="resetData_t">↺ 還原所有碑牌詞綴文字為預設</button></div>
+          </details>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /view-tab -->
 
   <footer>
-    <b>使用方式：</b>勾綠＝想要（亮起）、勾紅＝排除（隱藏）。複製後在台服倉庫／背包右上角的搜尋框貼上即可。<br>
-    <b>準確度說明：</b>每條詞綴下方的 <span style="font-family:var(--mono);color:var(--ember)">片段</span> 是程式從中文裡自動算出的「最短且不與其他詞綴衝突」的字串。
-    這些文字以台服慣用譯名填入，<b>建議第一次使用時對照遊戲內逐字確認</b>；若某條對不到，點該行文字直接修改，正則會立刻重算。<br>
+    <b>使用方式：</b>上方切換「換界石 / 碑牌」。換界石頁勾綠＝想要、勾紅＝排除；碑牌頁勾選＝想要（任一／全部）。複製後貼進台服倉庫／背包右上角的搜尋框即可。<br>
+    <b>準確度說明：</b>每條詞綴的搜尋關鍵詞皆以台服慣用譯名填入（碑牌類型已對照 poe2db 校正），<b>建議第一次使用時對照遊戲內逐字確認</b>；碑牌的 80 條詞綴若某條對不到，點該行文字（或進階面板）直接修改，正則會立刻重算，並存在瀏覽器中。<br>
     <b>注意：</b>遊戲改版時詞綴文字可能變動。本工具不隸屬 GGG／Garena，靈感來自 veiset/poe2.re（國際服版本）。
   </footer>
 </div>
@@ -501,7 +630,7 @@ function pushThresh(out, inputId, anchorId, r10){
   if(!v) return;
   const nr = numberRegex(v, r10);
   if(!nr) return;
-  out.push(`"${el(anchorId).value}.*${nr}%"`);
+  out.push(`"${nr}%.*${el(anchorId).value}"`);
 }
 function fragOf(m){ return (m.key||"").trim(); }
 
@@ -644,6 +773,305 @@ function toast(msg){
 /* ---------- init ---------- */
 renderMods();
 render();
+
+/* ===== TABLET MODULE ===== */
+const TAB_MODS=[
+  {id:0,name:"怪物的效用",key:"%怪物的效用",cat:"g"},
+  {id:1,name:"物品稀有度",key:"找到的物品稀有度",cat:"g"},
+  {id:2,name:"怪物群大小",key:"地圖內的怪物群大小",cat:"g"},
+  {id:3,name:"魔法怪物",key:"含有的魔法怪物",cat:"g"},
+  {id:4,name:"稀有怪物數量",key:"含有的稀有怪物數量",cat:"g"},
+  {id:5,name:"怪物稀有度",key:"%怪物稀有度",cat:"g"},
+  {id:6,name:"金幣數量",key:"金幣數量",cat:"g"},
+  {id:7,name:"經驗量",key:"經驗量",cat:"g"},
+  {id:8,name:"稀有箱子",key:"稀有箱子",cat:"g"},
+  {id:9,name:"換界石數量",key:"找到的換界石數量",cat:"g"},
+  {id:10,name:"額外隨機詞綴",key:"個額外隨機詞綴",cat:"g"},
+  {id:11,name:"傳奇怪物額外詞綴",key:"會擁有1個額外的詞綴",cat:"g"},
+  {id:12,name:"巢裔之血數量",key:"找到的巢裔之血數量",cat:"br"},
+  {id:13,name:"胎贈數量",key:"找到的胎贈數量",cat:"br"},
+  {id:14,name:"掉落高一等級胎贈",key:"高一等級的胎贈",cat:"br"},
+  {id:15,name:"不穩定裂痕含弗倫",key:"烈許的統領．弗倫",cat:"br"},
+  {id:16,name:"不穩定裂痕生成稀有怪",key:"穩定後生成一名額外稀有怪物",cat:"br"},
+  {id:17,name:"稀有裂痕怪物的效用",key:"稀有裂痕怪物的效用",cat:"br"},
+  {id:18,name:"裂痕的怪物群大小",key:"裂痕的怪物群大小",cat:"br"},
+  {id:19,name:"幻像斷片數量",key:"幻像斷片數量",cat:"de"},
+  {id:20,name:"迷霧消散前持續",key:"消散前額外持續",cat:"de"},
+  {id:21,name:"迷霧消散速度減少",key:"譫妄迷霧消散速度",cat:"de"},
+  {id:22,name:"玩家譫妄程度",key:"玩家的譫妄程度",cat:"de"},
+  {id:23,name:"譫妄怪物群大小",key:"譫妄怪物怪物群大小",cat:"de"},
+  {id:24,name:"譫妄生成破碎之鏡",key:"譫妄生成破碎之鏡",cat:"de"},
+  {id:25,name:"擊殺稀有暫停譫妄",key:"擊殺稀有怪物時會暫停",cat:"de"},
+  {id:26,name:"譫妄生成傳奇頭目",key:"更多機率生成傳奇頭目",cat:"de"},
+  {id:27,name:"譫妄生成裂鏡碎片",key:"裂鏡碎片",cat:"de"},
+  {id:28,name:"探險文物數量",key:"掉落的文物數量",cat:"ex"},
+  {id:29,name:"放置炸藥的距離",key:"放置炸藥的距離",cat:"ex"},
+  {id:30,name:"探險含有魔符",key:"探險事件含有+",cat:"ex"},
+  {id:31,name:"探險爆炸範圍",key:"探險事件爆炸的範圍",cat:"ex"},
+  {id:32,name:"探險日誌數量",key:"掉落的探險日誌數量",cat:"ex"},
+  {id:33,name:"探險稀有怪物數量",key:"探險事件含有稀有怪物的數量",cat:"ex"},
+  {id:34,name:"探險魔符效果",key:"探險事件魔符的效果",cat:"ex"},
+  {id:35,name:"符文怪物印記數量",key:"符文怪物印記的數量",cat:"ex"},
+  {id:36,name:"獻祭怪物提供貢禮",key:"所獻祭的怪物提供的貢禮",cat:"ri"},
+  {id:37,name:"重骰所需貢禮減少",key:"重骰所需的貢禮",cat:"ri"},
+  {id:38,name:"祭祀所需貢禮減少",key:"神壇所需的貢禮",cat:"ri"},
+  {id:39,name:"延遲恩惠出現加快",key:"延遲的恩惠之物",cat:"ri"},
+  {id:40,name:"祭壇額外重骰",key:"可以額外重骰",cat:"ri"},
+  {id:41,name:"機率不消耗貢禮",key:"機率不消耗貢禮",cat:"ri"},
+  {id:42,name:"復活為魔法怪物",key:"為魔法怪物的機率",cat:"ri"},
+  {id:43,name:"復活為稀有怪物",key:"為稀有怪物的機率",cat:"ri"},
+  {id:44,name:"祭祀獎勵為預兆",key:"獎勵為預兆的機率",cat:"ri"},
+  {id:45,name:"總督額外保險箱",key:"額外的一個保險箱",cat:"ov"},
+  {id:46,name:"總督額外神殿",key:"額外的一個神殿",cat:"ov"},
+  {id:47,name:"總督額外精髓",key:"額外的一個精髓",cat:"ov"},
+  {id:48,name:"總督額外魂靈",key:"額外的一個阿茲莫里魂靈",cat:"ov"},
+  {id:49,name:"頭目掉落換界石",key:"頭目掉落的換界石",cat:"ov"},
+  {id:50,name:"頭目賦予經驗",key:"頭目賦予的經驗",cat:"ov"},
+  {id:51,name:"頭目掉落物品稀有度",key:"頭目掉落物品的稀有度",cat:"ov"},
+  {id:52,name:"頭目掉落物品數量",key:"頭目的掉落物品數量",cat:"ov"},
+  {id:53,name:"深淵生成怪物數量",key:"深淵生成的怪物數量",cat:"ab"},
+  {id:54,name:"深淵生成稀有怪",key:"隻額外稀有怪物",cat:"ab"},
+  {id:55,name:"封閉坑洞增效用",key:"已關閉的坑洞",cat:"ab"},
+  {id:56,name:"前往無盡深淵",key:"前往無盡深淵",cat:"ab"},
+  {id:57,name:"額外1道深淵",key:"額外1道深淵",cat:"ab"},
+  {id:58,name:"深淵坑洞兩倍獎勵",key:"坑洞有兩倍機率",cat:"ab"},
+  {id:59,name:"四道額外深淵",key:"4道額外深淵",cat:"ab"},
+  {id:60,name:"擁有深淵詞綴機率",key:"擁有深淵詞綴的機率",cat:"ab"},
+  {id:61,name:"褻瀆通貨掉落",key:"褻瀆通貨掉落機率",cat:"ab"},
+  {id:62,name:"瓦爾烽塔群大小",key:"烽塔周遭的怪物群大小",cat:"te"},
+  {id:63,name:"瓦爾烽塔額外群怪",key:"烽塔周遭擁有額外",cat:"te"},
+  {id:64,name:"瓦爾烽塔召喚怪物",key:"烽塔召喚額外怪物",cat:"te"},
+  {id:65,name:"瓦爾烽塔額外水晶",key:"額外一個額外水晶",cat:"te"},
+  {id:66,name:"瓦爾烽塔傳奇怪物",key:"瓦爾烽塔傳奇怪物",cat:"te"},
+  {id:67,name:"瓦爾烽塔寶箱稀有",key:"烽塔的寶箱為稀有",cat:"te"},
+  {id:68,name:"額外阿茲莫里魂靈",key:"個額外阿茲莫里魂靈",cat:"az"},
+  {id:69,name:"含有阿茲莫里魂靈機率",key:"含有阿茲莫里魂靈的機率",cat:"az"},
+  {id:70,name:"額外的1個精髓",key:"額外的1個精髓",cat:"es"},
+  {id:71,name:"含有精髓機率",key:"含有精髓的機率",cat:"es"},
+  {id:72,name:"含有神殿機率",key:"含有神殿的機率",cat:"sh"},
+  {id:73,name:"額外的神殿",key:"個神殿",cat:"sh"},
+  {id:74,name:"含有保險箱機率",key:"含有保險箱的機率",cat:"sb"},
+  {id:75,name:"額外的保險箱",key:"個保險箱",cat:"sb"},
+  {id:76,name:"額外盜賊流亡者",key:"額外盜賊流亡者",cat:"re"},
+  {id:77,name:"含有盜賊流亡者機率",key:"含有盜賊流亡者的機率",cat:"re"},
+  {id:78,name:"額外的召喚法陣",key:"額外的1個召喚法陣",cat:"sc"},
+  {id:79,name:"含有召喚法陣機率",key:"含有召喚法陣的機率",cat:"sc"}
+];
+const TAB_CATS={"g": "一般", "br": "裂痕", "de": "譫妄", "ex": "探險", "ri": "祭祀", "ov": "總督", "ab": "深淵", "te": "神廟", "az": "阿茲莫里", "es": "精髓", "sh": "神殿", "sb": "保險箱", "re": "流亡者", "sc": "召喚法陣"};
+
+/* ============================================================
+   碑牌（Tablet）模組
+   ============================================================ */
+const LS_T = "poe2-tablet-tw-v2";
+let pick_t = {};      // id -> true（已選）
+let mode_t = "any";
+let search_t = "";
+let cat_t = "all";
+let numVal_t = {};    // id -> 數值字串
+
+function loadTab(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(LS_T));
+    if(saved && Array.isArray(saved) && saved.length===TAB_MODS.length){
+      const map = {}; saved.forEach(s=> map[s.id]=s.key);
+      return TAB_MODS.map(d=> ({...d, key: (map[d.id]!==undefined? map[d.id] : d.key)}));
+    }
+  }catch(e){}
+  return TAB_MODS.map(d=>({...d}));
+}
+function persistTab(){ try{ localStorage.setItem(LS_T, JSON.stringify(tmods.map(m=>({id:m.id,key:m.key})))); }catch(e){} }
+let tmods = loadTab();
+
+function clashesTab(mod){
+  const k=(mod.key||"").trim(); if(!k) return false;
+  return tmods.some(o=> o.id!==mod.id && o.key && (o.key.includes(k)||k.includes(o.key)));
+}
+
+/* 碑牌類型 regex */
+function typeRegexTab(){
+  const keys = ["breach","delirium","expedition","ritual","irradiated","overseer","abyss","temple"];
+  const on = keys.filter(k=> el("type_t").querySelector(`[data-k=${k}]`).classList.contains("on"));
+  if(on.length===0 || on.length===keys.length) return null;
+  const frags = on.map(k=> el("ta_"+k).value.trim()).filter(Boolean);
+  if(frags.length===0) return null;
+  return frags.length===1 ? `"${frags[0]}"` : `"(${frags.join("|")})"`;
+}
+
+/* 剩餘使用次數 regex（移植 generateUsesRemainingRegex，數字置於錨點前） */
+function usesRegexTab(){
+  if(!el("uses_en").checked) return null;
+  const n = intval("uses_n");
+  if(n<1 || n>18) return null;
+  let nr;
+  if(n<10) nr = `(${n===9?"9":`[${n}-9]`}|1[0-8])`;
+  else     nr = `(1[${n%10}-8])`;
+  const anchor = el("ta_uses").value.trim() || "次";
+  return `"${nr}.*${anchor}"`;
+}
+
+/* 單一碑牌詞綴的 regex（含選填數值門檻；遊戲內為「增加 N% …關鍵詞」，故數字%在前） */
+function affixRegexTab(m, r10){
+  const key = (m.key||"").trim();
+  const raw = (numVal_t[m.id]||"").trim();
+  if(!raw) return key;
+  const nr = numberRegex(raw, r10);
+  if(!nr) return key;
+  return `${nr}%.*${key}`;
+}
+
+function buildTab(){
+  const out = [];
+
+  // 稀有度
+  const rk = ["normal","magic","rare"].filter(k=>el("rarity_t").querySelector(`[data-k=${k}]`).classList.contains("on"));
+  if(rk.length>0 && rk.length<3){
+    const tail = el("ta_rarity").value.slice(-2);
+    const map = {normal:"普",magic:"魔",rare:"稀"};
+    const sub = rk.map(k=>map[k]);
+    out.push(rk.length===1 ? `"${tail}${sub[0]}"` : `"${tail}(${sub.join("|")})"`);
+  }
+
+  // 碑牌類型
+  const ty = typeRegexTab(); if(ty) out.push(ty);
+  // 剩餘使用次數
+  const us = usesRegexTab(); if(us) out.push(us);
+
+  // 已選詞綴
+  const r10 = el("round10_t").checked;
+  const sel = tmods.filter(m=>pick_t[m.id]).map(m=>affixRegexTab(m,r10)).filter(Boolean);
+  if(sel.length){
+    out.push(mode_t==="any" ? `"${sel.join("|")}"` : sel.map(f=>`"${f}"`).join(" "));
+  }
+
+  // 自訂
+  const c = el("custom_t").value.trim(); if(c) out.push(c);
+
+  return out.filter(Boolean).join(" ").trim();
+}
+
+function renderCatbar(){
+  const host = el("catfilter_t"); host.innerHTML="";
+  const mk=(k,label)=>{ const b=document.createElement("button"); b.dataset.c=k; b.textContent=label;
+    if(k===cat_t) b.classList.add("on"); return b; };
+  host.appendChild(mk("all","全部"));
+  Object.keys(TAB_CATS).forEach(k=> host.appendChild(mk(k,TAB_CATS[k])));
+}
+
+function renderModsTab(){
+  const host = el("mods_t"); host.innerHTML="";
+  let shown=0;
+  tmods.forEach(m=>{
+    const hide = (cat_t!=="all" && m.cat!==cat_t) ||
+                 (search_t && !(m.name.includes(search_t)||(m.key||"").includes(search_t)));
+    if(!hide) shown++;
+    const clash = clashesTab(m);
+    const row=document.createElement("div");
+    row.className="mod"+(hide?" hidden":"");
+    row.innerHTML = `
+      <div class="states">
+        <button class="sbtn want ${pick_t[m.id]?"on":""}" title="想要" data-id="${m.id}">✓</button>
+      </div>
+      <div class="body">
+        <div class="name">${esc(m.name)}
+          <span class="tag s">${esc(TAB_CATS[m.cat]||m.cat)}</span>
+        </div>
+        <div class="frag ${clash?"clash":""}">搜尋關鍵詞 →
+          <b class="txt" contenteditable="true" spellcheck="false" data-id="${m.id}">${esc(m.key||"")}</b><span class="warn">${clash?" ⚠ 與其他詞綴重疊，建議改用更獨特的字":""}</span>
+          <input class="num mini" type="number" min="0" placeholder="≥%" data-id="${m.id}" value="${esc(numVal_t[m.id]||"")}">
+        </div>
+      </div>`;
+    host.appendChild(row);
+  });
+  el("modcount_t").textContent = `${shown} / ${tmods.length}`;
+}
+
+function renderTab(){
+  const rx = buildTab();
+  const box = el("regexbox_t");
+  if(rx){ box.textContent = rx; }
+  else { box.innerHTML = '<span class="ph">在下方勾選碑牌詞綴後，正則會顯示在這裡…</span>'; }
+  const len = rx.length;
+  el("count_t").textContent = `${len} 字元` + (len>250 ? " ⚠ 可能超過搜尋框上限" : "");
+}
+
+/* 碑牌事件 */
+el("mods_t").addEventListener("click", e=>{
+  const b=e.target.closest(".sbtn"); if(!b) return;
+  const id=+b.dataset.id;
+  pick_t[id] = !pick_t[id];
+  if(!pick_t[id]) delete pick_t[id];
+  b.classList.toggle("on", !!pick_t[id]);
+  renderTab();
+});
+el("mods_t").addEventListener("input", e=>{
+  const t=e.target;
+  if(t.classList.contains("txt")){
+    const id=+t.dataset.id; const m=tmods.find(x=>x.id===id);
+    m.key=t.textContent;
+    const fragEl=t.closest(".frag"); const warnEl=fragEl.querySelector(".warn");
+    const clash=clashesTab(m);
+    fragEl.classList.toggle("clash",clash);
+    warnEl.textContent = clash ? " ⚠ 與其他詞綴重疊，建議改用更獨特的字" : "";
+    persistTab(); renderTab();
+  } else if(t.classList.contains("mini")){
+    const id=+t.dataset.id;
+    if(t.value.trim()) numVal_t[id]=t.value.trim(); else delete numVal_t[id];
+    renderTab();
+  }
+});
+el("search_t").addEventListener("input", e=>{ search_t=e.target.value.trim(); renderModsTab(); });
+el("matchmode_t").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  mode_t=b.dataset.m;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));
+  renderTab();
+});
+el("catfilter_t").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  cat_t=b.dataset.c;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));
+  renderModsTab();
+});
+chipGroup("rarity_t"); chipGroup("type_t");
+["uses_en","uses_n","round10_t","custom_t",
+ "ta_breach","ta_delirium","ta_expedition","ta_ritual","ta_irradiated","ta_overseer","ta_abyss","ta_temple","ta_rarity","ta_uses"]
+ .forEach(id=> el(id).addEventListener("input", renderTab));
+
+el("copy_t").addEventListener("click", async ()=>{
+  const rx=buildTab();
+  if(!rx){ toast("尚未產生任何正則"); return; }
+  try{ await navigator.clipboard.writeText(rx); toast("已複製到剪貼簿"); }
+  catch(e){ const ta=document.createElement("textarea"); ta.value=rx; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("已複製到剪貼簿"); }
+});
+el("reset_t").addEventListener("click", ()=>{
+  pick_t={}; numVal_t={}; mode_t="any"; search_t=""; cat_t="all";
+  el("search_t").value=""; el("custom_t").value=""; el("uses_n").value=""; el("uses_en").checked=false; el("round10_t").checked=false;
+  el("rarity_t").querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+  el("type_t").querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+  el("matchmode_t").querySelectorAll("button").forEach((c,i)=>c.classList.toggle("on",i===0));
+  renderCatbar(); renderModsTab(); renderTab();
+});
+el("resetData_t").addEventListener("click", ()=>{
+  if(!confirm("確定要把所有碑牌詞綴文字還原成預設嗎？你修改過的內容會消失。")) return;
+  localStorage.removeItem(LS_T);
+  tmods = TAB_MODS.map(d=>({...d}));
+  renderModsTab(); renderTab();
+});
+
+/* 分頁切換 */
+document.querySelector(".tabs").addEventListener("click", e=>{
+  const b=e.target.closest(".tab"); if(!b) return;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t===b));
+  const v=b.dataset.v;
+  el("view-ws").classList.toggle("on", v==="ws");
+  el("view-tab").classList.toggle("on", v==="tab");
+});
+
+/* 碑牌 init */
+renderCatbar();
+renderModsTab();
+renderTab();
+
 </script>
 </body>
 </html>
