@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台服 換界石正則產生器 · PoE2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1014; --bg2:#141a21; --panel:#171f28; --panel2:#1d2731;
+    --line:#2a3744; --line2:#34465680;
+    --ink:#e7e2d6; --ink-dim:#9aa6ad; --ink-faint:#697680;
+    --ember:#d8a657; --ember-d:#b07f30;
+    --want:#7bbf6a; --want-bg:#7bbf6a1f;
+    --avoid:#d06b5c; --avoid-bg:#d06b5c1f;
+    --blue:#6fa8d0;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+    --tc:'Noto Sans TC',system-ui,sans-serif;
+    --disp:'Cinzel',serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1a232d 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink); font-family:var(--tc);
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+    padding:0 0 80px;
+  }
+  a{color:var(--ember)}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 18px}
+
+  /* ---- header ---- */
+  header{padding:34px 0 18px; text-align:center; position:relative}
+  header .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.32em;
+    color:var(--ember-d); text-transform:uppercase; margin-bottom:10px}
+  header h1{font-family:var(--disp); font-weight:600; font-size:clamp(26px,4.5vw,40px);
+    margin:0; letter-spacing:.02em; color:var(--ink);
+    text-shadow:0 1px 0 #000a}
+  header h1 .b{color:var(--ember)}
+  header p.sub{color:var(--ink-dim); margin:10px auto 0; max-width:620px; font-size:14.5px}
+
+  /* ---- sticky result ---- */
+  .result-dock{position:sticky; top:0; z-index:30; padding-top:10px;
+    background:linear-gradient(var(--bg) 65%, transparent)}
+  .result{background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; padding:14px 14px 12px; box-shadow:0 10px 30px #0007}
+  .result .r-top{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+  .result .r-top .label{font-family:var(--mono); font-size:11px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ink-faint)}
+  .result .r-top .count{margin-left:auto; font-family:var(--mono); font-size:12px;
+    color:var(--ink-faint)}
+  .result .r-top .count b{color:var(--ember)}
+  .result .r-top .count.over b{color:var(--avoid)}
+  .regexbox{font-family:var(--mono); font-size:15px; line-height:1.6;
+    background:var(--bg2); border:1px solid var(--line2); border-radius:8px;
+    padding:12px 13px; min-height:50px; color:#f0ecdf; word-break:break-all;
+    white-space:pre-wrap; user-select:all}
+  .regexbox .ph{color:var(--ink-faint); user-select:none}
+  .btn{font-family:var(--tc); cursor:pointer; border:1px solid var(--line);
+    background:var(--panel2); color:var(--ink); border-radius:8px; padding:8px 14px;
+    font-size:13.5px; transition:.12s; white-space:nowrap}
+  .btn:hover{border-color:var(--ember-d); color:#fff}
+  .btn.primary{background:linear-gradient(180deg,var(--ember),var(--ember-d));
+    border-color:var(--ember-d); color:#1a1206; font-weight:700}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .copybtn{min-width:78px}
+
+  /* ---- layout ---- */
+  .grid{display:grid; grid-template-columns:1fr 320px; gap:18px; margin-top:20px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px}
+  .panel-h{display:flex; align-items:center; gap:10px; padding:13px 15px;
+    border-bottom:1px solid var(--line)}
+  .panel-h h2{font-family:var(--disp); font-weight:600; font-size:16px; margin:0;
+    letter-spacing:.03em}
+  .panel-h .hint{font-size:12px; color:var(--ink-faint); margin-left:auto}
+  .panel-b{padding:13px 15px}
+
+  /* ---- search + mode ---- */
+  .toolrow{display:flex; gap:8px; padding:12px 15px; border-bottom:1px solid var(--line);
+    flex-wrap:wrap; align-items:center}
+  .search{flex:1 1 180px; min-width:140px; background:var(--bg2);
+    border:1px solid var(--line2); border-radius:8px; padding:8px 11px; color:var(--ink);
+    font-family:var(--tc); font-size:14px}
+  .search::placeholder{color:var(--ink-faint)}
+  .seg{display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+  .seg button{font-family:var(--tc); background:transparent; border:0; color:var(--ink-dim);
+    padding:8px 12px; font-size:13px; cursor:pointer}
+  .seg button.on{background:var(--ember); color:#1a1206; font-weight:700}
+
+  /* ---- mod list ---- */
+  .mods{max-height:560px; overflow:auto}
+  .mod{display:flex; align-items:flex-start; gap:11px; padding:10px 15px;
+    border-bottom:1px solid #202a33}
+  .mod:last-child{border-bottom:0}
+  .mod.hidden{display:none}
+  .mod .states{display:flex; flex-direction:column; gap:5px; flex:0 0 auto}
+  .sbtn{width:30px; height:26px; border-radius:6px; border:1px solid var(--line);
+    background:var(--bg2); color:var(--ink-faint); cursor:pointer; font-size:14px;
+    display:flex; align-items:center; justify-content:center; transition:.1s; line-height:1}
+  .sbtn:hover{border-color:var(--ink-dim)}
+  .sbtn.want.on{background:var(--want-bg); border-color:var(--want); color:var(--want)}
+  .sbtn.avoid.on{background:var(--avoid-bg); border-color:var(--avoid); color:var(--avoid)}
+  .mod .body{flex:1; min-width:0}
+  .mod .name{font-size:14.5px; color:var(--ink); display:flex; gap:8px; align-items:center;
+    flex-wrap:wrap}
+  .tag{font-family:var(--mono); font-size:10px; padding:1px 6px; border-radius:4px;
+    letter-spacing:.05em}
+  .tag.p{background:#6fa8d022; color:var(--blue); border:1px solid #6fa8d044}
+  .tag.s{background:#d8a65722; color:var(--ember); border:1px solid #d8a65744}
+  .mod .txt{font-size:12.5px; color:var(--ink-dim); margin-top:3px; cursor:text;
+    border-radius:5px; padding:2px 5px; margin-left:-5px; border:1px solid transparent}
+  .mod .txt:hover{border-color:var(--line2); background:#0d1014}
+  .mod .txt[contenteditable]:focus{border-color:var(--ember-d); background:#0d1014;
+    outline:none; color:var(--ink)}
+  .mod .frag{font-family:var(--mono); font-size:11.5px; margin-top:4px; color:var(--ink-faint)}
+  .mod .frag b{color:var(--ember); background:#d8a6571a; padding:0 4px; border-radius:3px}
+  .mod .frag.clash b{color:var(--avoid); background:#d06b5c1a}
+
+  /* ---- side controls ---- */
+  .ctl{margin-bottom:16px}
+  .ctl:last-child{margin-bottom:0}
+  .ctl > .lab{font-family:var(--mono); font-size:11px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px; display:block}
+  .chips{display:flex; flex-wrap:wrap; gap:7px}
+  .chip{font-family:var(--tc); font-size:13px; padding:7px 12px; border-radius:999px;
+    border:1px solid var(--line); background:var(--bg2); color:var(--ink-dim); cursor:pointer;
+    transition:.1s}
+  .chip:hover{border-color:var(--ink-dim)}
+  .chip.on{background:var(--ember); border-color:var(--ember); color:#1a1206; font-weight:600}
+  .chip.on.neg{background:var(--avoid); border-color:var(--avoid); color:#1a0c08}
+  .rangerow{display:flex; align-items:center; gap:8px}
+  .num{width:62px; background:var(--bg2); border:1px solid var(--line2); border-radius:7px;
+    padding:7px 9px; color:var(--ink); font-family:var(--mono); font-size:13px; text-align:center}
+  .num::placeholder{color:var(--ink-faint)}
+  .thresh{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+  .thresh label{flex:1; font-size:13px; color:var(--ink-dim)}
+  .thresh .num{width:70px}
+  textarea.custom{width:100%; min-height:54px; background:var(--bg2);
+    border:1px solid var(--line2); border-radius:8px; padding:9px 10px; color:var(--ink);
+    font-family:var(--mono); font-size:13px; resize:vertical}
+  details.adv{margin-top:6px; border-top:1px solid var(--line); padding-top:12px}
+  details.adv summary{cursor:pointer; font-size:13px; color:var(--ink-dim); list-style:none}
+  details.adv summary::-webkit-details-marker{display:none}
+  details.adv summary::before{content:"▸ "; color:var(--ember-d)}
+  details.adv[open] summary::before{content:"▾ "}
+  .kv{display:flex; align-items:center; gap:8px; margin-top:9px}
+  .kv label{flex:0 0 96px; font-size:12.5px; color:var(--ink-faint)}
+  .kv input{flex:1; background:var(--bg2); border:1px solid var(--line2); border-radius:6px;
+    padding:6px 8px; color:var(--ink); font-family:var(--mono); font-size:12.5px}
+  .clearbtn{font-size:12px; color:var(--ink-faint); background:none; border:0; cursor:pointer;
+    text-decoration:underline; margin-left:auto}
+  .clearbtn:hover{color:var(--avoid)}
+
+  footer{max-width:1080px; margin:28px auto 0; padding:18px; color:var(--ink-faint);
+    font-size:12.5px; line-height:1.7}
+  footer b{color:var(--ink-dim)}
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--ember); color:#1a1206; font-weight:700; padding:10px 20px; border-radius:10px;
+    font-size:14px; opacity:0; pointer-events:none; transition:.25s; box-shadow:0 8px 24px #0008}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Path of Exile 2 · 台服 / 繁體中文</div>
+    <h1>換界石 <span class="b">正則</span>產生器</h1>
+    <p class="sub">勾選想要與想排除的詞綴，自動產生可貼進台服倉庫搜尋框的正則。詞綴文字皆可即時修改，正則會跟著重算。</p>
+  </header>
+
+  <div class="result-dock">
+    <div class="result">
+      <div class="r-top">
+        <span class="label">產生的正則</span>
+        <span class="count" id="count">0 字元</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:stretch">
+        <div class="regexbox" id="regexbox"><span class="ph">在下方勾選詞綴後，正則會顯示在這裡…</span></div>
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <button class="btn primary copybtn" id="copy">複製</button>
+          <button class="btn" id="reset">清除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- mods -->
+    <div class="panel">
+      <div class="panel-h">
+        <h2>詞綴</h2>
+        <span class="hint" id="modcount"></span>
+      </div>
+      <div class="toolrow">
+        <input class="search" id="search" placeholder="搜尋詞綴（中文 / 關鍵字）…">
+        <div class="seg" id="affixfilter">
+          <button data-f="all" class="on">全部</button>
+          <button data-f="prefix">前綴</button>
+          <button data-f="suffix">後綴</button>
+        </div>
+      </div>
+      <div class="toolrow" style="border-top:0; padding-top:0">
+        <span style="font-size:12.5px;color:var(--ink-faint)">想要詞綴的匹配方式：</span>
+        <div class="seg" id="matchmode">
+          <button data-m="any" class="on">任一即可</button>
+          <button data-m="all">全部都要</button>
+        </div>
+        <span style="font-size:11.5px;color:var(--ink-faint);margin-left:4px">
+          綠＝想要&nbsp;·&nbsp;紅＝排除</span>
+      </div>
+      <div class="mods" id="mods"></div>
+    </div>
+
+    <!-- controls -->
+    <div>
+      <div class="panel">
+        <div class="panel-h"><h2>篩選條件</h2></div>
+        <div class="panel-b">
+
+          <div class="ctl">
+            <span class="lab">稀有度</span>
+            <div class="chips" id="rarity">
+              <button class="chip" data-k="normal">普通</button>
+              <button class="chip" data-k="magic">魔法</button>
+              <button class="chip" data-k="rare">稀有</button>
+            </div>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">狀態</span>
+            <div class="chips" id="state">
+              <button class="chip" data-k="corrupted">已汙染</button>
+              <button class="chip neg-able" data-k="uncorrupted">未汙染</button>
+              <button class="chip" data-k="delirious">譫妄</button>
+            </div>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">換界石階級</span>
+            <div class="rangerow">
+              <input class="num" id="tierMin" type="number" min="1" max="16" placeholder="最低">
+              <span style="color:var(--ink-faint)">—</span>
+              <input class="num" id="tierMax" type="number" min="1" max="16" placeholder="最高">
+              <span style="font-size:12px;color:var(--ink-faint)">（1–16）</span>
+            </div>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">數值門檻（≥ %）</span>
+            <div class="thresh">
+              <label>物品數量</label>
+              <input class="num" id="thQuant" type="number" min="0" placeholder="—">
+            </div>
+            <div class="thresh">
+              <label>物品稀有度</label>
+              <input class="num" id="thRarity" type="number" min="0" placeholder="—">
+            </div>
+            <div class="thresh">
+              <label>換界石掉落機率</label>
+              <input class="num" id="thDrop" type="number" min="0" placeholder="—">
+            </div>
+            <div class="thresh">
+              <label>魔法怪物</label>
+              <input class="num" id="thMagic" type="number" min="0" placeholder="—">
+            </div>
+            <div class="thresh">
+              <label>稀有怪物</label>
+              <input class="num" id="thRare" type="number" min="0" placeholder="—">
+            </div>
+            <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-dim);margin-top:2px;cursor:pointer">
+              <input type="checkbox" id="round10"> 數值無條件捨去到 10（更寬鬆）
+            </label>
+          </div>
+
+          <div class="ctl">
+            <span class="lab">自訂文字（直接附加）</span>
+            <textarea class="custom" id="custom" placeholder='例如： "iLvl: 8" "+18%"'></textarea>
+          </div>
+
+          <details class="adv">
+            <summary>進階：搜尋字串設定（若遊戲內用詞不同可在此修正）</summary>
+            <div class="kv"><label>稀有度錨點</label><input id="a_rarity" value="稀有度: "></div>
+            <div class="kv"><label>普通 / 魔法 / 稀有</label><input id="a_rwords" value="普通,魔法,稀有"></div>
+            <div class="kv"><label>已汙染關鍵字</label><input id="a_corr" value="汙染"></div>
+            <div class="kv"><label>譫妄關鍵字</label><input id="a_delir" value="譫妄"></div>
+            <div class="kv"><label>階級錨點</label><input id="a_tier" value="階級: "></div>
+            <div class="kv"><label>物品數量錨點</label><input id="a_quant" value="物品數量"></div>
+            <div class="kv"><label>物品稀有度錨點</label><input id="a_irar" value="物品稀有度"></div>
+            <div class="kv"><label>換界石掉落機率錨點</label><input id="a_drop" value="換界石掉落機率"></div>
+            <div class="kv"><label>魔法怪物錨點</label><input id="a_mmon" value="魔法怪物"></div>
+            <div class="kv"><label>稀有怪物錨點</label><input id="a_rmon" value="稀有怪物"></div>
+            <div style="margin-top:10px"><button class="clearbtn" id="resetData">↺ 還原所有詞綴文字為預設</button></div>
+          </details>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <b>使用方式：</b>勾綠＝想要（亮起）、勾紅＝排除（隱藏）。複製後在台服倉庫／背包右上角的搜尋框貼上即可。<br>
+    <b>準確度說明：</b>每條詞綴下方的 <span style="font-family:var(--mono);color:var(--ember)">片段</span> 是程式從中文裡自動算出的「最短且不與其他詞綴衝突」的字串。
+    這些文字以台服慣用譯名填入，<b>建議第一次使用時對照遊戲內逐字確認</b>；若某條對不到，點該行文字直接修改，正則會立刻重算。<br>
+    <b>注意：</b>遊戲改版時詞綴文字可能變動。本工具不隸屬 GGG／Garena，靈感來自 veiset/poe2.re（國際服版本）。
+  </footer>
+</div>
+
+<div class="toast" id="toast">已複製到剪貼簿</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   換界石詞綴資料（台服繁中）
+   affix : 'prefix'（前綴）| 'suffix'（後綴）
+   key   : 實際貼進搜尋框的關鍵詞——取「不會誤中物品其他文字」的
+           特徵詞（多為 3–4 字）。可在介面直接編輯，正則即時重算。
+   ============================================================ */
+const DEFAULT_MODS = [
+  {id:0, name:"時空鎖鏈（緩速）", affix:"suffix", key:"時空鎖鏈"},
+  {id:1, name:"額外混沌傷害",     affix:"prefix", key:"額外混沌"},
+  {id:2, name:"點燃地面",         affix:"suffix", key:"點燃地面"},
+  {id:3, name:"元素衰弱詛咒",     affix:"suffix", key:"元素衰弱"},
+  {id:4, name:"額外冰冷傷害",     affix:"prefix", key:"額外冰冷"},
+  {id:5, name:"額外火焰傷害",     affix:"prefix", key:"額外火焰"},
+  {id:6, name:"傷害穿透元素抗性", affix:"prefix", key:"傷害穿透"},
+  {id:7, name:"暈眩／異常閾值",   affix:"suffix", key:"暈眩閾值"},
+  {id:8, name:"生命護盾恢復降低", affix:"suffix", key:"護盾恢復速率"},
+  {id:9, name:"暴擊額外傷害減少", affix:"suffix", key:"暴擊額外傷害"},
+  {id:10,name:"擊破護甲",         affix:"prefix", key:"擊破護甲"},
+  {id:11,name:"額外最大能量護盾", affix:"suffix", key:"額外最大能量護盾"},
+  {id:12,name:"攻擊施放移速提高", affix:"prefix", key:"施放和移動速度"},
+  {id:13,name:"機率造成流血",     affix:"prefix", key:"造成流血"},
+  {id:14,name:"暴擊率／暴擊傷害", affix:"prefix", key:"暴擊傷害加成"},
+  {id:15,name:"怪物元素抗性提高", affix:"suffix", key:"元素抗性提高"},
+  {id:16,name:"增加怪物傷害",     affix:"prefix", key:"增加怪物傷害"},
+  {id:17,name:"怪物具有護甲",     affix:"suffix", key:"怪物具有護甲"},
+  {id:18,name:"冰緩地面",         affix:"suffix", key:"冰緩地面"},
+  {id:19,name:"冷卻恢復降低",     affix:"suffix", key:"冷卻恢復"},
+  {id:20,name:"額外閃電傷害",     affix:"prefix", key:"額外閃電"},
+  {id:21,name:"暈眩累積提高",     affix:"prefix", key:"暈眩累積"},
+  {id:22,name:"衰弱詛咒",         affix:"suffix", key:"施加衰弱"},
+  {id:23,name:"怪物具有閃避",     affix:"suffix", key:"具有閃避"},
+  {id:24,name:"藥劑充能減少",     affix:"suffix", key:"藥劑充能"},
+  {id:25,name:"感電地面",         affix:"suffix", key:"感電地面"},
+  {id:26,name:"命中提高",         affix:"prefix", key:"命中"},
+  {id:27,name:"機率中毒",         affix:"prefix", key:"中毒"},
+  {id:28,name:"元素異常施加提高", affix:"suffix", key:"元素異常"},
+  {id:29,name:"玩家最大抗性降低", affix:"suffix", key:"最大抗性"},
+  {id:30,name:"更多怪物生命",     affix:"prefix", key:"怪物生命"},
+  {id:31,name:"詛咒效果降低",     affix:"suffix", key:"詛咒對怪物"},
+];
+
+/* ---------- state ---------- */
+const LS = "poe2-waystone-tw-v1";
+let mods = load();
+let pick = {};      // id -> 'want' | 'avoid'
+let mode = "any";   // want match mode
+let affixFilter = "all";
+let searchTerm = "";
+
+function load(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(LS));
+    if(saved && Array.isArray(saved) && saved.length===DEFAULT_MODS.length){
+      // merge: keep edited text, fixed structure
+      return DEFAULT_MODS.map(d=>{
+        const s = saved.find(x=>x.id===d.id);
+        return {...d, key: (s && s.key) ? s.key : d.key};
+      });
+    }
+  }catch(e){}
+  return DEFAULT_MODS.map(d=>({...d}));
+}
+function persist(){ try{ localStorage.setItem(LS, JSON.stringify(mods.map(m=>({id:m.id,key:m.key})))); }catch(e){} }
+
+/* ============================================================
+   關鍵詞衝突檢查：某詞綴的 key 若是另一條 key 的子字串，
+   貼進搜尋框時可能同時命中兩者 → 提醒使用者修改。
+   （與 poe2.re 的「無誤判」精神一致，改在繁中關鍵詞上把關）
+   ============================================================ */
+function clashes(mod){
+  const k = (mod.key||"").trim();
+  if(!k) return false;
+  return mods.some(o=> o.id!==mod.id && o.key && (o.key.includes(k) || k.includes(o.key)));
+}
+
+/* ---------- 數值門檻 regex（移植自 poe2.re GenerateNumberRegex） ---------- */
+function numberRegex(numStr, round10){
+  const digits = String(numStr).match(/\d/g);
+  if(!digits) return "";
+  let quant = round10 ? Math.floor(Number(digits.join(""))/10)*10 : Number(digits.join(""));
+  if(isNaN(quant)||quant===0){ return (round10 && digits.length===1) ? "." : ""; }
+  if(quant>=100) return threeDigitMin(quant);
+  if(quant>9){
+    const s=String(quant), d0=s[0], d1=s[1];
+    if(d1==="0") return `([${d0}-9].|\\d..)`;
+    if(d0==="9") return `(${d0}[${d1}-9]|\\d..)`;
+    return `(${d0}[${d1}-9]|[${Number(d0)+1}-9].|\\d..)`;
+  }
+  return `([${quant}-9]|\\d..?)`;
+}
+function threeDigitMin(n){
+  const s=String(n), d0=s[0],d1=s[1],d2=s[2], D0=+d0,D1=+d1;
+  if(d1==="0"&&d2==="0") return D0===9?`${d0}..`:`[${d0}-9]..`;
+  let head;
+  if(d2==="0") head = d1==="9"?`${d0}9.`:`${d0}[${d1}-9].`;
+  else if(d1==="0") head = `${d0}(0[${d2}-9]|[1-9].)`;
+  else if(d1==="9"&&d2==="9") head = `${d0}99`;
+  else if(d1==="9") head = `${d0}9[${d2}-9]`;
+  else head = `${d0}(${d1}[${d2}-9]|[${D1+1}-9].)`;
+  return D0===9?head:`(${head}|[${D0+1}-9]..)`;
+}
+
+/* ---------- 階級範圍（1–16） ---------- */
+function tierRegex(min,max){
+  min = min||0; max = max||0;
+  if(min===0 && max===0) return null;
+  let lo = min||1, hi = max||16;
+  if(lo>hi) return null;
+  if(lo<=1 && hi>=16) return null;
+  lo=Math.max(1,lo); hi=Math.min(16,hi);
+  const nums=[]; for(let i=lo;i<=hi;i++) nums.push(i);
+  const under=nums.filter(n=>n<10), over=nums.filter(n=>n>=10);
+  const anchor = el("a_tier").value;
+  const parts=[];
+  if(under.length){
+    let u = under.length===1 ? `${under[0]}`
+      : (under.length>2 ? `[${under[0]}-${under[under.length-1]}]` : `[${under.join("")}]`);
+    parts.push(`${anchor}${u}`);
+  }
+  if(over.length){
+    let o = over.length===1 ? `${over[0]}` : `1[${over.map(n=>String(n)[1]).join("")}]`;
+    parts.push(`${anchor}${o}`);
+  }
+  return `"${parts.join("|")}"`;
+}
+
+/* ============================================================
+   組合最終正則（鏡像 poe2.re 的 WaystoneResult 流程）
+   ============================================================ */
+function build(){
+  const out = [];
+
+  // 稀有度
+  const rk = ["normal","magic","rare"].filter(k=>el("rarity").querySelector(`[data-k=${k}]`).classList.contains("on"));
+  if(rk.length>0 && rk.length<3){
+    const anchor = el("a_rarity").value;
+    const words = el("a_rwords").value.split(",");
+    const map = {normal:words[0]||"普通", magic:words[1]||"魔法", rare:words[2]||"稀有"};
+    // 取每個稀有度詞的「首字」避免過長；以「度: 」錨定
+    const tail = anchor.slice(-2); // 例如 "度: "
+    const sub = rk.map(k=>map[k][0]);
+    out.push(rk.length===1 ? `"${tail}${sub[0]}"` : `"${tail}(${sub.join("|")})"`);
+  }
+
+  // 階級
+  const t = tierRegex(intval("tierMin"), intval("tierMax"));
+  if(t) out.push(t);
+
+  // 想要 / 排除 詞綴
+  const want = mods.filter(m=>pick[m.id]==="want").map(fragOf);
+  const avoid = mods.filter(m=>pick[m.id]==="avoid").map(fragOf);
+  if(want.length){
+    out.push(mode==="any" ? `"${want.join("|")}"` : want.map(f=>`"${f}"`).join(" "));
+  }
+  if(avoid.length){
+    out.push(`"!${avoid.join("|")}"`);
+  }
+
+  // 狀態
+  const st = el("state");
+  const corr = st.querySelector("[data-k=corrupted]").classList.contains("on");
+  const uncorr = st.querySelector("[data-k=uncorrupted]").classList.contains("on");
+  const delir = st.querySelector("[data-k=delirious]").classList.contains("on");
+  if(delir) out.push(`"${el("a_delir").value}"`);
+  if(corr && !uncorr) out.push(`"${el("a_corr").value}"`);
+  else if(uncorr && !corr) out.push(`"!${el("a_corr").value}"`);
+
+  // 數值門檻
+  const r10 = el("round10").checked;
+  pushThresh(out, "thQuant", "a_quant", r10);
+  pushThresh(out, "thRarity","a_irar",  r10);
+  pushThresh(out, "thDrop",  "a_drop",  r10);
+  pushThresh(out, "thMagic", "a_mmon",  r10);
+  pushThresh(out, "thRare",  "a_rmon",  r10);
+
+  // 自訂
+  const c = el("custom").value.trim();
+  if(c) out.push(c);
+
+  return out.filter(Boolean).join(" ").trim();
+}
+function pushThresh(out, inputId, anchorId, r10){
+  const v = intval(inputId);
+  if(!v) return;
+  const nr = numberRegex(v, r10);
+  if(!nr) return;
+  out.push(`"${el(anchorId).value}.*${nr}%"`);
+}
+function fragOf(m){ return (m.key||"").trim(); }
+
+/* ============================================================
+   render
+   ============================================================ */
+function el(id){ return document.getElementById(id); }
+function intval(id){ const v=parseInt(el(id).value,10); return isNaN(v)?0:v; }
+
+function renderMods(){
+  const host = el("mods");
+  host.innerHTML = "";
+  let shown=0;
+  mods.forEach(m=>{
+    const hide = (affixFilter!=="all" && m.affix!==affixFilter) ||
+                 (searchTerm && !(m.name.includes(searchTerm)||(m.key||"").includes(searchTerm)));
+    if(!hide) shown++;
+    const clash = clashes(m);
+    const row = document.createElement("div");
+    row.className = "mod" + (hide?" hidden":"");
+    row.innerHTML = `
+      <div class="states">
+        <button class="sbtn want ${pick[m.id]==="want"?"on":""}" title="想要" data-act="want" data-id="${m.id}">✓</button>
+        <button class="sbtn avoid ${pick[m.id]==="avoid"?"on":""}" title="排除" data-act="avoid" data-id="${m.id}">✕</button>
+      </div>
+      <div class="body">
+        <div class="name">${esc(m.name)}
+          <span class="tag ${m.affix==="prefix"?"p":"s"}">${m.affix==="prefix"?"前綴":"後綴"}</span>
+        </div>
+        <div class="frag ${clash?"clash":""}">搜尋關鍵詞 →
+          <b class="txt" contenteditable="true" spellcheck="false" data-id="${m.id}">${esc(m.key||"")}</b><span class="warn">${clash?" ⚠ 與其他詞綴重疊，建議改用更獨特的字":""}</span></div>
+      </div>`;
+    host.appendChild(row);
+  });
+  el("modcount").textContent = `${shown} / ${mods.length}`;
+}
+
+function render(){
+  const rx = build();
+  const box = el("regexbox");
+  if(rx){ box.textContent = rx; }
+  else { box.innerHTML = '<span class="ph">在下方勾選詞綴後，正則會顯示在這裡…</span>'; }
+  const len = rx.length;
+  const c = el("count");
+  c.innerHTML = `<b>${len}</b> 字元`;
+  c.classList.toggle("over", len>250);  // 倉庫搜尋約 250 字上限提醒
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ---------- events ---------- */
+el("mods").addEventListener("click", e=>{
+  const b = e.target.closest("[data-act]");
+  if(!b) return;
+  const id = +b.dataset.id, act = b.dataset.act;
+  pick[id] = (pick[id]===act) ? undefined : act;
+  if(!pick[id]) delete pick[id];
+  renderMods(); render();
+});
+el("mods").addEventListener("input", e=>{
+  const t = e.target.closest(".txt[contenteditable]");
+  if(!t) return;
+  const id = +t.dataset.id;
+  const m = mods.find(x=>x.id===id);
+  m.key = t.textContent;
+  // 只更新衝突提示，不重繪可編輯文字，避免打字時游標跳走
+  const fragEl = t.closest(".frag");
+  const warnEl = fragEl.querySelector(".warn");
+  const clash = clashes(m);
+  fragEl.classList.toggle("clash", clash);
+  warnEl.textContent = clash ? " ⚠ 與其他詞綴重疊，建議改用更獨特的字" : "";
+  persist(); render();
+});
+
+el("affixfilter").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  affixFilter=b.dataset.f;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));
+  renderMods();
+});
+el("matchmode").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  mode=b.dataset.m;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle("on",c===b));
+  render();
+});
+el("search").addEventListener("input", e=>{ searchTerm=e.target.value.trim(); renderMods(); });
+
+function chipGroup(id){
+  el(id).addEventListener("click", e=>{
+    const b=e.target.closest(".chip"); if(!b) return;
+    b.classList.toggle("on");
+    if(id==="state"){ // 已汙染 / 未汙染 互斥
+      if(b.dataset.k==="corrupted" && b.classList.contains("on"))
+        el("state").querySelector("[data-k=uncorrupted]").classList.remove("on");
+      if(b.dataset.k==="uncorrupted" && b.classList.contains("on"))
+        el("state").querySelector("[data-k=corrupted]").classList.remove("on");
+    }
+    render();
+  });
+}
+chipGroup("rarity"); chipGroup("state");
+
+["tierMin","tierMax","thQuant","thRarity","thDrop","thMagic","thRare","round10","custom",
+ "a_rarity","a_rwords","a_corr","a_delir","a_tier","a_quant","a_irar","a_drop","a_mmon","a_rmon"]
+ .forEach(id=> el(id).addEventListener("input", render));
+
+el("copy").addEventListener("click", async ()=>{
+  const rx = build();
+  if(!rx){ toast("尚未產生任何正則"); return; }
+  try{ await navigator.clipboard.writeText(rx); toast("已複製到剪貼簿"); }
+  catch(e){
+    const ta=document.createElement("textarea"); ta.value=rx; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); ta.remove(); toast("已複製到剪貼簿");
+  }
+});
+el("reset").addEventListener("click", ()=>{
+  pick={}; mode="any"; searchTerm=""; affixFilter="all";
+  el("search").value="";
+  ["tierMin","tierMax","thQuant","thRarity","thDrop","thMagic","thRare","custom"].forEach(id=>el(id).value="");
+  el("round10").checked=false;
+  el("rarity").querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+  el("state").querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+  el("matchmode").querySelectorAll("button").forEach((c,i)=>c.classList.toggle("on",i===0));
+  el("affixfilter").querySelectorAll("button").forEach((c,i)=>c.classList.toggle("on",i===0));
+  renderMods(); render();
+});
+el("resetData").addEventListener("click", ()=>{
+  if(!confirm("確定要把所有詞綴文字還原成預設嗎？你修改過的內容會消失。")) return;
+  localStorage.removeItem(LS);
+  mods = DEFAULT_MODS.map(d=>({...d}));
+  renderMods(); render();
+});
+
+function toast(msg){
+  const t=el("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1600);
+}
+
+/* ---------- init ---------- */
+renderMods();
+render();
+</script>
+</body>
+</html>
