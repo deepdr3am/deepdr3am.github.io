@@ -271,26 +271,30 @@
           </div>
 
           <div class="ctl">
-            <span class="lab">數值門檻（≥ %）</span>
+            <span class="lab">換界石既有數值門檻（≥）</span>
             <div class="thresh">
-              <label>物品數量</label>
+              <label>物品數量 %</label>
               <input class="num" id="thQuant" type="number" min="0" placeholder="—">
             </div>
             <div class="thresh">
-              <label>物品稀有度</label>
+              <label>物品稀有度 %</label>
               <input class="num" id="thRarity" type="number" min="0" placeholder="—">
             </div>
             <div class="thresh">
-              <label>換界石掉落機率</label>
+              <label>怪物群大小 %</label>
+              <input class="num" id="thPack" type="number" min="0" placeholder="—">
+            </div>
+            <div class="thresh">
+              <label>怪物效能 %</label>
+              <input class="num" id="thPotency" type="number" min="0" placeholder="—">
+            </div>
+            <div class="thresh">
+              <label>換界石掉落機率 %</label>
               <input class="num" id="thDrop" type="number" min="0" placeholder="—">
             </div>
             <div class="thresh">
-              <label>魔法怪物</label>
-              <input class="num" id="thMagic" type="number" min="0" placeholder="—">
-            </div>
-            <div class="thresh">
-              <label>稀有怪物</label>
-              <input class="num" id="thRare" type="number" min="0" placeholder="—">
+              <label>可用的復活數</label>
+              <input class="num" id="thRevive" type="number" min="0" placeholder="—">
             </div>
             <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-dim);margin-top:2px;cursor:pointer">
               <input type="checkbox" id="round10"> 數值無條件捨去到 10（更寬鬆）
@@ -311,9 +315,10 @@
             <div class="kv"><label>階級錨點</label><input id="a_tier" value="階級: "></div>
             <div class="kv"><label>物品數量錨點</label><input id="a_quant" value="物品數量"></div>
             <div class="kv"><label>物品稀有度錨點</label><input id="a_irar" value="物品稀有度"></div>
+            <div class="kv"><label>怪物群大小錨點</label><input id="a_pack" value="怪物群大小"></div>
+            <div class="kv"><label>怪物效能錨點</label><input id="a_pot" value="怪物效能"></div>
             <div class="kv"><label>換界石掉落機率錨點</label><input id="a_drop" value="換界石掉落機率"></div>
-            <div class="kv"><label>魔法怪物錨點</label><input id="a_mmon" value="魔法怪物"></div>
-            <div class="kv"><label>稀有怪物錨點</label><input id="a_rmon" value="稀有怪物"></div>
+            <div class="kv"><label>可用的復活數錨點</label><input id="a_revive" value="可用的復活數"></div>
             <div style="margin-top:10px"><button class="clearbtn" id="resetData">↺ 還原所有詞綴文字為預設</button></div>
           </details>
 
@@ -451,42 +456,48 @@
            特徵詞（多為 3–4 字）。可在介面直接編輯，正則即時重算。
    ============================================================ */
 const DEFAULT_MODS = [
-  {id:0, name:"時空鎖鏈（緩速）", affix:"suffix", key:"時空鎖鏈"},
-  {id:1, name:"額外混沌傷害",     affix:"prefix", key:"額外混沌"},
-  {id:2, name:"點燃地面",         affix:"suffix", key:"點燃地面"},
-  {id:3, name:"元素衰弱詛咒",     affix:"suffix", key:"元素衰弱"},
-  {id:4, name:"額外冰冷傷害",     affix:"prefix", key:"額外冰冷"},
-  {id:5, name:"額外火焰傷害",     affix:"prefix", key:"額外火焰"},
-  {id:6, name:"傷害穿透元素抗性", affix:"prefix", key:"傷害穿透"},
-  {id:7, name:"暈眩／異常閾值",   affix:"suffix", key:"暈眩閾值"},
-  {id:8, name:"生命護盾恢復降低", affix:"suffix", key:"護盾恢復速率"},
-  {id:9, name:"暴擊額外傷害減少", affix:"suffix", key:"暴擊額外傷害"},
-  {id:10,name:"擊破護甲",         affix:"prefix", key:"擊破護甲"},
-  {id:11,name:"額外最大能量護盾", affix:"suffix", key:"額外最大能量護盾"},
-  {id:12,name:"攻擊施放移速提高", affix:"prefix", key:"施放和移動速度"},
-  {id:13,name:"機率造成流血",     affix:"prefix", key:"造成流血"},
-  {id:14,name:"暴擊率／暴擊傷害", affix:"prefix", key:"暴擊傷害加成"},
-  {id:15,name:"怪物元素抗性提高", affix:"suffix", key:"元素抗性提高"},
-  {id:16,name:"增加怪物傷害",     affix:"prefix", key:"增加怪物傷害"},
-  {id:17,name:"怪物具有護甲",     affix:"suffix", key:"怪物具有護甲"},
-  {id:18,name:"冰緩地面",         affix:"suffix", key:"冰緩地面"},
-  {id:19,name:"冷卻恢復降低",     affix:"suffix", key:"冷卻恢復"},
-  {id:20,name:"額外閃電傷害",     affix:"prefix", key:"額外閃電"},
-  {id:21,name:"暈眩累積提高",     affix:"prefix", key:"暈眩累積"},
-  {id:22,name:"衰弱詛咒",         affix:"suffix", key:"施加衰弱"},
-  {id:23,name:"怪物具有閃避",     affix:"suffix", key:"具有閃避"},
-  {id:24,name:"藥劑充能減少",     affix:"suffix", key:"藥劑充能"},
-  {id:25,name:"感電地面",         affix:"suffix", key:"感電地面"},
-  {id:26,name:"命中提高",         affix:"prefix", key:"命中"},
-  {id:27,name:"機率中毒",         affix:"prefix", key:"中毒"},
-  {id:28,name:"元素異常施加提高", affix:"suffix", key:"元素異常"},
-  {id:29,name:"玩家最大抗性降低", affix:"suffix", key:"最大抗性"},
-  {id:30,name:"更多怪物生命",     affix:"prefix", key:"怪物生命"},
-  {id:31,name:"詛咒效果降低",     affix:"suffix", key:"詛咒對怪物"},
+  /* ---- 前綴（prefix）---- 對照 poe2db Waystones low/mid/top tier ---- */
+  {id:0, name:"額外火焰傷害",       affix:"prefix", key:"額外火焰"},
+  {id:1, name:"額外冰冷傷害",       affix:"prefix", key:"額外冰冷"},
+  {id:2, name:"額外閃電傷害",       affix:"prefix", key:"額外閃電"},
+  {id:3, name:"額外混沌傷害",       affix:"prefix", key:"額外混沌"},
+  {id:4, name:"增加怪物傷害",       affix:"prefix", key:"怪物傷害"},
+  {id:5, name:"怪物暴擊率／暴擊傷害",affix:"prefix", key:"暴擊傷害加成"},
+  {id:6, name:"更多怪物生命",       affix:"prefix", key:"怪物生命"},
+  {id:7, name:"機率造成中毒",       affix:"prefix", key:"造成中毒"},
+  {id:8, name:"機率引起流血",       affix:"prefix", key:"引起流血"},
+  {id:9, name:"怪物破壞護甲",       affix:"prefix", key:"破壞的護甲"},
+  {id:10,name:"怪物命中值提高",     affix:"prefix", key:"命中值"},
+  {id:11,name:"怪物暈眩累積提高",   affix:"prefix", key:"暈眩累積"},
+  {id:12,name:"怪物額外投射物",     affix:"prefix", key:"額外投射物"},
+  {id:13,name:"怪物傷害穿透元素抗性",affix:"prefix", key:"傷害穿透"},
+  {id:14,name:"怪物攻擊／施放／移動速度提高", affix:"prefix", key:"移動速度"},
+
+  /* ---- 後綴（suffix）---- */
+  {id:15,name:"稀有怪物有額外詞綴", affix:"suffix", key:"1個額外詞綴"},
+  {id:16,name:"怪物元素抗性提高",   affix:"suffix", key:"怪物元素抗性"},
+  {id:17,name:"怪物為裝甲（護甲）", affix:"suffix", key:"怪物為裝甲"},
+  {id:18,name:"怪物為閃避",         affix:"suffix", key:"怪物為閃避"},
+  {id:19,name:"額外最大能量護盾",   affix:"suffix", key:"最大能量護盾"},
+  {id:20,name:"暈眩／異常狀態門檻", affix:"suffix", key:"暈眩門檻"},
+  {id:21,name:"元素異常狀態施加提高",affix:"suffix", key:"異常狀態施加"},
+  {id:22,name:"增加怪物範圍效果",   affix:"suffix", key:"範圍效果"},
+  {id:23,name:"玩家被衰弱詛咒",     affix:"suffix", key:"衰弱詛咒"},
+  {id:24,name:"玩家被時空鎖鏈（緩速）", affix:"suffix", key:"時空鎖鏈"},
+  {id:25,name:"玩家被元素要害詛咒", affix:"suffix", key:"元素要害"},
+  {id:26,name:"點燃地面",           affix:"suffix", key:"點燃地面"},
+  {id:27,name:"冰緩地面",           affix:"suffix", key:"冰緩地面"},
+  {id:28,name:"感電地面",           affix:"suffix", key:"感電地面"},
+  {id:29,name:"玩家最大抗性降低",   affix:"suffix", key:"最大抗性"},
+  {id:30,name:"玩家藥劑充能減少",   affix:"suffix", key:"藥劑充能"},
+  {id:31,name:"玩家生命／護盾恢復降低", affix:"suffix", key:"護盾恢復率"},
+  {id:32,name:"玩家冷卻時間恢復降低", affix:"suffix", key:"冷卻時間恢復"},
+  {id:33,name:"怪物受暴擊承受傷害減少", affix:"suffix", key:"承受的額外傷害"},
+  {id:34,name:"怪物身上詛咒效果降低", affix:"suffix", key:"詛咒具有"},
 ];
 
 /* ---------- state ---------- */
-const LS = "poe2-waystone-tw-v1";
+const LS = "poe2-waystone-tw-v2";
 let mods = load();
 let pick = {};      // id -> 'want' | 'avoid'
 let mode = "any";   // want match mode
@@ -611,13 +622,14 @@ function build(){
   if(corr && !uncorr) out.push(`"${el("a_corr").value}"`);
   else if(uncorr && !corr) out.push(`"!${el("a_corr").value}"`);
 
-  // 數值門檻
+  // 數值門檻（換界石既有詞綴：格式為「標籤: +N%」，數字在錨點之後）
   const r10 = el("round10").checked;
-  pushThresh(out, "thQuant", "a_quant", r10);
-  pushThresh(out, "thRarity","a_irar",  r10);
-  pushThresh(out, "thDrop",  "a_drop",  r10);
-  pushThresh(out, "thMagic", "a_mmon",  r10);
-  pushThresh(out, "thRare",  "a_rmon",  r10);
+  pushThresh(out, "thQuant",  "a_quant",  r10,   true);
+  pushThresh(out, "thRarity", "a_irar",   r10,   true);
+  pushThresh(out, "thPack",   "a_pack",   r10,   true);
+  pushThresh(out, "thPotency","a_pot",    r10,   true);
+  pushThresh(out, "thDrop",   "a_drop",   r10,   true);
+  pushThresh(out, "thRevive", "a_revive", false, false); // 可用的復活數為整數，無 %
 
   // 自訂
   const c = el("custom").value.trim();
@@ -625,12 +637,13 @@ function build(){
 
   return out.filter(Boolean).join(" ").trim();
 }
-function pushThresh(out, inputId, anchorId, r10){
+function pushThresh(out, inputId, anchorId, r10, pct){
   const v = intval(inputId);
   if(!v) return;
   const nr = numberRegex(v, r10);
   if(!nr) return;
-  out.push(`"${nr}%.*${el(anchorId).value}"`);
+  // 台服換界石既有詞綴格式為「換界石掉落機率: +65%」：錨點在前、數字%在後
+  out.push(`"${el(anchorId).value}.*${nr}${pct ? "%" : ""}"`);
 }
 function fragOf(m){ return (m.key||"").trim(); }
 
@@ -734,8 +747,8 @@ function chipGroup(id){
 }
 chipGroup("rarity"); chipGroup("state");
 
-["tierMin","tierMax","thQuant","thRarity","thDrop","thMagic","thRare","round10","custom",
- "a_rarity","a_rwords","a_corr","a_delir","a_tier","a_quant","a_irar","a_drop","a_mmon","a_rmon"]
+["tierMin","tierMax","thQuant","thRarity","thPack","thPotency","thDrop","thRevive","round10","custom",
+ "a_rarity","a_rwords","a_corr","a_delir","a_tier","a_quant","a_irar","a_pack","a_pot","a_drop","a_revive"]
  .forEach(id=> el(id).addEventListener("input", render));
 
 el("copy").addEventListener("click", async ()=>{
@@ -750,7 +763,7 @@ el("copy").addEventListener("click", async ()=>{
 el("reset").addEventListener("click", ()=>{
   pick={}; mode="any"; searchTerm=""; affixFilter="all";
   el("search").value="";
-  ["tierMin","tierMax","thQuant","thRarity","thDrop","thMagic","thRare","custom"].forEach(id=>el(id).value="");
+  ["tierMin","tierMax","thQuant","thRarity","thPack","thPotency","thDrop","thRevive","custom"].forEach(id=>el(id).value="");
   el("round10").checked=false;
   el("rarity").querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
   el("state").querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
